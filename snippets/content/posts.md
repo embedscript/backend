@@ -12,6 +12,8 @@ Transform your static brochure site into an actual blog.
 Display blogs.
 JS Fiddle https://jsfiddle.net/rohqmnc1/23/.
 
+![Get posts](/static/get-posts.png)
+
 ```html
 <div id="content"></div>
 <!-- @todo we should move this to a single micro embeddable js file -->
