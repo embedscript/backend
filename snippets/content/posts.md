@@ -12,10 +12,6 @@ Transform your static brochure site into an actual blog.
 Display blogs.
 JS Fiddle https://jsfiddle.net/rohqmnc1/23/.
 
-Screenshot
-
-![Get posts](images/get-posts.png)
-
 ```html
 <div id="content"></div>
 <!-- @todo we should move this to a single micro embeddable js file -->
@@ -49,3 +45,7 @@ Screenshot
 ```sh
 curl 'https://api.m3o.dev/posts/query' -H 'accept: application/json, text/plain, */*' -H 'micro-namespace: concert-celtic-uncover'
 ```
+
+Screenshot
+
+![Get posts](images/get-posts.png)

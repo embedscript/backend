@@ -49,6 +49,9 @@ defaultContentLanguage = "en"
 [[params.language_tabs]]
 key = "html"
 name = "HTML"
+[[params.language_tabs]]
+key = "sh"
+name = "Shell"
 
 [params]
 search = true
