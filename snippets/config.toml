@@ -49,3 +49,6 @@ defaultContentLanguage = "en"
 [[params.language_tabs]]
 key = "html"
 name = "HTML"
+
+[params]
+search = true
