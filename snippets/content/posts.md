@@ -12,7 +12,9 @@ Transform your static brochure site into an actual blog.
 Display blogs.
 JS Fiddle https://jsfiddle.net/rohqmnc1/23/.
 
-![Get posts](/static/get-posts.png)
+Screenshot
+
+![Get posts](images/get-posts.png)
 
 ```html
 <div id="content"></div>
@@ -42,4 +44,8 @@ JS Fiddle https://jsfiddle.net/rohqmnc1/23/.
   });
 
 </script>
+```
+
+```sh
+curl 'https://api.m3o.dev/posts/query' -H 'accept: application/json, text/plain, */*' -H 'micro-namespace: concert-celtic-uncover'
 ```
