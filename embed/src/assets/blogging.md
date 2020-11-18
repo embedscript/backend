@@ -11,13 +11,10 @@ Get posts
   document.addEventListener("DOMContentLoaded", function(event) {
     var template = '{{#posts}}<h1>{{title}}</h1>{{/posts}}';
 
-    Micro.get("posts/query", "concert-celtic-uncover", {
-      "id": "p1"
-    }, function(data) {
+    Micro.get("posts/query", "concert-celtic-uncover", {}, function(data) {
       var result = Mustache.render(template, data);
       document.getElementById("content").innerHTML = result;
     })
   });
-
 </script>
 ```
