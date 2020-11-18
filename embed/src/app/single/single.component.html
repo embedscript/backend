@@ -1,1 +1,14 @@
-<p>single works!</p>
+<div id="container">
+  <mat-card class="card">
+    <mat-card-header>
+      <mat-card-title style="padding-left: 0"><a routerLink="/">Embeds</a> &nbsp;&nbsp;>&nbsp;&nbsp; Blogging</mat-card-title>
+      <!-- <mat-card-subtitle>Subtitle</mat-card-subtitle> -->
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        <br /><br />
+        <markdown *ngIf="embedID" src="/assets/{{ embedID }}.md"></markdown>
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>
