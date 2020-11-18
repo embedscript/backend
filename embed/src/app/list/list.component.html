@@ -9,27 +9,26 @@
   fxLayoutAlign="flex-start"
 >
   <ng-container *ngFor="let widget of embeds">
-    <div fxFlex="0 1 calc(33.3% - 32px)" sstyle="padding-bottom: 2em">
-      <mat-card class="card" class="example-card">
+    <div fxFlex="0 1 calc(33.3% - 32px)" style="padding-bottom: 2em">
+      <mat-card class="card">
         <mat-card-header>
-          <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>{{ widget.Name }}</mat-card-title>
-          <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+          <mat-card-title style="padding-left: 0;">{{ widget.Name }}</mat-card-title>
+          <!-- <mat-card-subtitle>Subtitle</mat-card-subtitle> -->
         </mat-card-header>
         <img
           *ngIf="widget.Image"
           mat-card-image
-          src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-          alt="Photo of a Shiba Inu"
+          src="image.jpg"
+          alt="Alt text"
         />
-        <mat-card-content>
+        <mat-card-content style="height: 4em">
           <p>
             {{ widget.Description }}
           </p>
         </mat-card-content>
         <mat-card-actions>
           <button *ngIf="widget.Available" mat-raised-button>Learn more</button>
-          <button *ngIf="!widget.Available" mat-button>Coming soon</button>
+          <button *ngIf="!widget.Available" mat-button disabled=true>Coming soon</button>
         </mat-card-actions>
       </mat-card>
     </div>

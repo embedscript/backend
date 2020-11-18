@@ -17,20 +17,27 @@
 }
 
 #banner {
-    text-align:  center;
-    width: 100%;
-    padding: 2em;
+  text-align: center;
+  width: 100%;
+  padding: 2em;
 }
 
 #main-sentence {
-    font-size: 2em;
+  font-size: 2em;
 }
 
 #grid {
-    width: 60%;
-    margin: 0 auto;
+  width: 60%;
+  margin: 0 auto;
 }
 
 .card {
-    margin-bottom: 2em;
+  margin-bottom: 2em;
+  padding: 2em;
+  border-radius: 10px;
+}
+
+::ng-deep .mat-card-header-text {
+  /* CSS styles go here */
+  margin: 0px !important;
 }
