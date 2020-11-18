@@ -6,8 +6,7 @@ Get posts
 <div id="content"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.0/mustache.js"></script>
-<script src="https://determined-shaw-741e5d.netlify.app/assets/micro.js>
-<script src="></script>
+<script src="https://determined-shaw-741e5d.netlify.app/assets/micro.js">
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function(event) {
     var template = '{{#posts}}<h1>{{title}}</h1>{{/posts}}';
