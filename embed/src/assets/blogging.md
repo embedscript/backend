@@ -40,5 +40,3 @@ Get a single post. The below snippet uses the query parameters of your page to l
   });
 </script>
 ```
-
-# Edit post
