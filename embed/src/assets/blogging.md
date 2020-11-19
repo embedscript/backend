@@ -12,13 +12,15 @@ The `Blogging Embed` turns your static site into a dynamic blog with a few widge
   document.addEventListener("DOMContentLoaded", function(event) {
     var template = '{{#posts}}<h1><a href="/post?id={{id}}">{{title}}<a/></h1>{{/posts}}';
 
-    Micro.get("posts/query", "concert-celtic-uncover", {}, function(data) {
+    Micro.get("posts/query", "backend", {}, function(data) {
       var result = Mustache.render(template, data);
       document.getElementById("content").innerHTML = result;
     })
   });
 </script>
 ```
+<mat-raised-button>asasd</mat-raised-button>
+
 <br /><br />
 # Get single post
 
@@ -33,7 +35,7 @@ Get a single post. The below snippet uses the query parameters of your page to l
   document.addEventListener("DOMContentLoaded", function(event) {
     var template = '{{#posts}}<h1>{{title}}</h1>{{/posts}}';
 
-    Micro.get("posts/query", "concert-celtic-uncover", {"id":Micro.params()["id"]}, function(data) {
+    Micro.get("posts/query", "backend", {"id":Micro.params()["id"]}, function(data) {
       var result = Mustache.render(template, data);
       document.getElementById("content").innerHTML = result;
     })
