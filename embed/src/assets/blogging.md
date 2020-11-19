@@ -19,7 +19,7 @@ The `Blogging Embed` turns your static site into a dynamic blog with a few widge
   });
 </script>
 ```
-<br /><br / >
+<br /><br />
 # Get single post
 
 Get a single post. The below snippet uses the query parameters of your page to load a post by ID, ie. the `?id=someID` part of the url.
@@ -40,3 +40,5 @@ Get a single post. The below snippet uses the query parameters of your page to l
   });
 </script>
 ```
+
+# Edit post
