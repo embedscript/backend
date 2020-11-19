@@ -12,8 +12,23 @@ var Micro = (function () {
     );
   }
 
-  // Create the methods object
+  function getSearchParameters() {
+    var prmstr = window.location.search.substr(1);
+    return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
+  }
+
+  function transformToAssocArray(prmstr) {
+    var params = {};
+    var prmarr = prmstr.split("&");
+    for (var i = 0; i < prmarr.length; i++) {
+      var tmparr = prmarr[i].split("=");
+      params[tmparr[0]] = tmparr[1];
+    }
+    return params;
+  }
+
   var methods = {
+    // get makes a get request to the Micro backend
     get: function (path, namespace, params, callback) {
       var xmlHttp = new XMLHttpRequest();
       xmlHttp.onreadystatechange = function () {
@@ -28,6 +43,10 @@ var Micro = (function () {
       xmlHttp.setRequestHeader("micro-namespace", namespace);
       xmlHttp.send(null);
     },
+
+    // params returns the query parameters of the current page as an map
+    // ie. example.com?a=1&b=2 becomes {"a":"1","b":2"}
+    params: getSearchParameters,
   };
 
   // Expose the public methods
