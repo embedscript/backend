@@ -48,10 +48,22 @@ function get(path, namespace, params, callback) {
   xmlHttp.send(null);
 }
 
+function post(path, namespace, params, callback) {
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.onreadystatechange = function () {
+    if (xmlHttp.readyState == 4 && xmlHttp.status == 200);
+    callback(JSON.parse(xmlHttp.responseText));
+  };
+  xmlHttp.open("POST", "https://api.m3o.dev/" + path, true); // true for asynchronous
+  xmlHttp.setRequestHeader("micro-namespace", namespace);
+  xmlHttp.send(JSON.stringify(params));
+}
+
 var constructor = function () {
   var methods = {
     // get makes a get request to the Micro backend
     get: get,
+    post: post,
     isLoggedIn() {
       var v = getCookieValue("micro_session");
       if (v.length == 0) {
@@ -87,12 +99,20 @@ function initModal() {
   // Get the button that opens the modal
   var loginButton = document.getElementById("loginButton");
   loginButton.onclick = function () {
-    Micro.get("signup/login", "backend", {
-      email: document.getElementById("emailInput").value,
-      password: document.getElementById("passwordInput").value,
-    }, function(text) {
-      console.log(text)
-    });
+    Micro.post(
+      "auth/Auth/Token",
+      "micro",
+      {
+        id: document.getElementById("emailInput").value,
+        secret: document.getElementById("passwordInput").value,
+        options: {
+          namespace: "backend",
+        },
+      },
+      function (text) {
+        console.log(text);
+      }
+    );
   };
 
   // When the user clicks the button, open the modal
