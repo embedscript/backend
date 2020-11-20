@@ -24,7 +24,6 @@ import (
 	"github.com/micro/micro/v3/service/client"
 	mconfig "github.com/micro/micro/v3/service/config"
 	merrors "github.com/micro/micro/v3/service/errors"
-	mevents "github.com/micro/micro/v3/service/events"
 	logger "github.com/micro/micro/v3/service/logger"
 	mstore "github.com/micro/micro/v3/service/store"
 )
@@ -229,11 +228,6 @@ func (e *Signup) sendVerificationEmail(ctx context.Context,
 		return merrors.InternalServerError("signup.SendVerificationEmail", internalErrorMsg)
 	}
 
-	ev := SignupEvent{Signup: SignupModel{Email: tok.Email, CustomerID: tok.CustomerID}, Type: "signup.verificationemail"}
-	if err := mevents.Publish(signupTopic, ev); err != nil {
-		logger.Errorf("Error publishing signup.verificationemail for event %+v", ev)
-	}
-
 	return nil
 }
 
@@ -304,10 +298,6 @@ func (e *Signup) verify(ctx context.Context, req *signup.VerifyRequest, rsp *sig
 
 	rsp.Namespaces = []string{namespace}
 	rsp.CustomerID = tok.CustomerID
-	ev := SignupEvent{Signup: SignupModel{Email: tok.Email, CustomerID: tok.CustomerID}, Type: "signup.verify"}
-	if err := mevents.Publish(signupTopic, ev); err != nil {
-		logger.Errorf("Error publishing signup.verify for event %+v", ev)
-	}
 
 	return nil
 }
@@ -386,10 +376,6 @@ func (e *Signup) completeSignup(ctx context.Context, req *signup.CompleteSignupR
 		Expiry:       t.Expiry.Unix(),
 		Created:      t.Created.Unix(),
 	}
-	ev := SignupEvent{Signup: SignupModel{Email: tok.Email, Namespace: namespace, CustomerID: tok.CustomerID}, Type: "signup.completed"}
-	if err := mevents.Publish(signupTopic, ev); err != nil {
-		logger.Errorf("Error publishing signup.completed for event %+v", ev)
-	}
 
 	return nil
 }
@@ -434,11 +420,6 @@ func (e *Signup) Recover(ctx context.Context, req *signup.RecoverRequest, rsp *s
 	})
 	if err == nil {
 		e.cache.Set(req.Email, true, cache.DefaultExpiration)
-	}
-
-	ev := SignupEvent{Signup: SignupModel{Email: req.Email, CustomerID: custResp.Customer.Id}, Type: "signup.recover"}
-	if err := mevents.Publish(signupTopic, ev); err != nil {
-		logger.Errorf("Error publishing signup.recover for event %+v", ev)
 	}
 
 	return err

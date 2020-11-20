@@ -48,7 +48,30 @@ function get(path, namespace, params, callback) {
   xmlHttp.send(null);
 }
 
-function init() {
+var constructor = function () {
+  var methods = {
+    // get makes a get request to the Micro backend
+    get: get,
+    isLoggedIn() {
+      var v = getCookieValue("micro_session");
+      if (v.length == 0) {
+        return false;
+      }
+      return true;
+    },
+    // params returns the query parameters of the current page as an map
+    // ie. example.com?a=1&b=2 becomes {"a":"1","b":2"}
+    params: getSearchParameters,
+    // render: mustache.render,
+  };
+
+  // Expose the public methods
+  return methods;
+};
+
+var Micro = constructor();
+
+function initModal() {
   document.body.innerHTML += template;
 
   // Set up handlers for modal
@@ -60,6 +83,17 @@ function init() {
 
   // Get the <span> element that closes the modal
   var span = document.getElementsByClassName("close")[0];
+
+  // Get the button that opens the modal
+  var loginButton = document.getElementById("loginButton");
+  loginButton.onclick = function () {
+    Micro.get("signup/login", "backend", {
+      email: document.getElementById("emailInput").value,
+      password: document.getElementById("passwordInput").value,
+    }, function(text) {
+      console.log(text)
+    });
+  };
 
   // When the user clicks the button, open the modal
   btn.onclick = function () {
@@ -78,30 +112,9 @@ function init() {
     }
   };
 
-  return {
-    btn: btn,
-    modal: modal,
-    span: span,
-  }
+  Micro["popup"] = function () {
+    btn.click();
+  };
 }
 
-var constructor = function () {
-  var modal = init()
-  var methods = {
-    // get makes a get request to the Micro backend
-    get: get,
-    isLoggedIn() {},
-    popup: function () {
-      modal.btn.click();
-    },
-    // params returns the query parameters of the current page as an map
-    // ie. example.com?a=1&b=2 becomes {"a":"1","b":2"}
-    params: getSearchParameters,
-    // render: mustache.render,
-  };
-
-  // Expose the public methods
-  return methods;
-};
-
-var Micro = constructor();
+initModal();
