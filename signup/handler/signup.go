@@ -110,7 +110,6 @@ func NewSignup(srv *service.Service, auth auth.Auth) *Signup {
 		cache:               cache.New(1*time.Minute, 5*time.Minute),
 		alertService:        aproto.NewAlertService("alert", srv.Client()),
 	}
-	go s.consumeEvents()
 	return s
 }
 
