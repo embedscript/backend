@@ -1,4 +1,6 @@
-var Micro = (function () {
+import * as mustache from './mustache';
+
+var constructor = function () {
   "use strict";
 
   function formatParams(params) {
@@ -27,6 +29,11 @@ var Micro = (function () {
     return params;
   }
 
+  function getCookieValue(a) {
+    var b = document.cookie.match("(^|;)\\s*" + a + "\\s*=\\s*([^;]+)");
+    return b ? b.pop() : "";
+  }
+
   var methods = {
     // get makes a get request to the Micro backend
     get: function (path, namespace, params, callback) {
@@ -44,11 +51,18 @@ var Micro = (function () {
       xmlHttp.send(null);
     },
 
+    isLoggedIn() {},
+
     // params returns the query parameters of the current page as an map
     // ie. example.com?a=1&b=2 becomes {"a":"1","b":2"}
     params: getSearchParameters,
+
+    render: mustache.render,
   };
 
   // Expose the public methods
   return methods;
-})();
+};
+
+export var Micro = constructor()
+

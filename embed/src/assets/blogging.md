@@ -6,7 +6,6 @@ The `Blogging Embed` turns your static site into a dynamic blog with a few widge
 ```html
 <div id="content"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.0/mustache.js"></script>
 <script src="https://determined-shaw-741e5d.netlify.app/assets/micro.js"></script>
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function(event) {
@@ -19,7 +18,7 @@ The `Blogging Embed` turns your static site into a dynamic blog with a few widge
   });
 </script>
 ```
-<mat-raised-button>asasd</mat-raised-button>
+[JSFiddle]
 
 <br /><br />
 # Get single post
