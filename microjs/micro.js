@@ -656,54 +656,51 @@ var mustache = Object.freeze({
 
 });
 
+var template = "<!DOCTYPE html>\n<div class=\"center\">\n  <input type=\"checkbox\" id=\"show\">\n  <label for=\"show\" class=\"show-btn\">View Form</label>\n  <div class=\"container\">\n    <label for=\"show\" class=\"close-btn fas fa-times\" title=\"close\"></label>\n    <div class=\"text\">Login Form</div>\n    <form action=\"#\">\n      <div class=\"data\">\n        <label>Email or Phone</label>\n        <input type=\"text\" required>\n      </div>\n      <div class=\"data\">\n        <label>Password</label>\n        <input type=\"password\" required>\n      </div>\n      <div class=\"forgot-pass\">\n        <a href=\"#\">Forgot Password?</a>\n      </div>\n      <div class=\"btn\">\n        <div class=\"inner\"></div>\n        <button type=\"submit\">login</button>\n      </div>\n      <div class=\"signup-link\">Not a member? <a href=\"#\">Signup now</a></div>\n    </form>\n  </div>\n</div>\n";
+
+function formatParams(params) {
+  return "?" + Object.keys(params).map(function (key) {
+    return key + "=" + encodeURIComponent(params[key]);
+  }).join("&");
+}
+
+function getSearchParameters() {
+  var prmstr = window.location.search.substr(1);
+  return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
+}
+
+function transformToAssocArray(prmstr) {
+  var params = {};
+  var prmarr = prmstr.split("&");
+  for (var i = 0; i < prmarr.length; i++) {
+    var tmparr = prmarr[i].split("=");
+    params[tmparr[0]] = tmparr[1];
+  }
+  return params;
+}
+
+function get(path, namespace, params, callback) {
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.onreadystatechange = function () {
+    if (xmlHttp.readyState == 4 && xmlHttp.status == 200) ;
+    callback(JSON.parse(xmlHttp.responseText));
+  };
+  xmlHttp.open("GET", "https://api.m3o.dev/" + path + formatParams(params), true); // true for asynchronous
+  xmlHttp.setRequestHeader("micro-namespace", namespace);
+  xmlHttp.send(null);
+}
+
 var constructor = function () {
-  "use strict";
-
-  function formatParams(params) {
-    return "?" + Object.keys(params).map(function (key) {
-      return key + "=" + encodeURIComponent(params[key]);
-    }).join("&");
-  }
-
-  function getSearchParameters() {
-    var prmstr = window.location.search.substr(1);
-    return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
-  }
-
-  function transformToAssocArray(prmstr) {
-    var params = {};
-    var prmarr = prmstr.split("&");
-    for (var i = 0; i < prmarr.length; i++) {
-      var tmparr = prmarr[i].split("=");
-      params[tmparr[0]] = tmparr[1];
-    }
-    return params;
-  }
-
-  function getCookieValue(a) {
-    var b = document.cookie.match("(^|;)\\s*" + a + "\\s*=\\s*([^;]+)");
-    return b ? b.pop() : "";
-  }
-
   var methods = {
     // get makes a get request to the Micro backend
-    get: function (path, namespace, params, callback) {
-      var xmlHttp = new XMLHttpRequest();
-      xmlHttp.onreadystatechange = function () {
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) ;
-        callback(JSON.parse(xmlHttp.responseText));
-      };
-      xmlHttp.open("GET", "https://api.m3o.dev/" + path + formatParams(params), true); // true for asynchronous
-      xmlHttp.setRequestHeader("micro-namespace", namespace);
-      xmlHttp.send(null);
-    },
-
+    get: get,
     isLoggedIn() {},
-
+    popup: function () {
+      console.log(template);
+    },
     // params returns the query parameters of the current page as an map
     // ie. example.com?a=1&b=2 becomes {"a":"1","b":2"}
     params: getSearchParameters,
-
     render: mustache.render
   };
 
