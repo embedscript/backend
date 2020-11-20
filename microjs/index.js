@@ -1,5 +1,5 @@
 "use strict";
-import * as mustache from "./mustache";
+//import * as mustache from "./mustache";
 import template from "./popup.html";
 
 function formatParams(params) {
@@ -48,22 +48,60 @@ function get(path, namespace, params, callback) {
   xmlHttp.send(null);
 }
 
+function init() {
+  document.body.innerHTML += template;
+
+  // Set up handlers for modal
+  // Get the modal
+  var modal = document.getElementById("myModal");
+
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // When the user clicks the button, open the modal
+  btn.onclick = function () {
+    modal.style.display = "block";
+  };
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function () {
+    modal.style.display = "none";
+  };
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  return {
+    btn: btn,
+    modal: modal,
+    span: span,
+  }
+}
+
 var constructor = function () {
+  var modal = init()
   var methods = {
     // get makes a get request to the Micro backend
     get: get,
     isLoggedIn() {},
     popup: function () {
-      console.log(template)
+      modal.btn.click();
     },
     // params returns the query parameters of the current page as an map
     // ie. example.com?a=1&b=2 becomes {"a":"1","b":2"}
     params: getSearchParameters,
-    render: mustache.render,
+    // render: mustache.render,
   };
 
   // Expose the public methods
   return methods;
 };
 
-export var Micro = constructor();
+var Micro = constructor();
