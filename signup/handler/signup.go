@@ -23,7 +23,6 @@ import (
 	"github.com/micro/micro/v3/service/auth"
 	"github.com/micro/micro/v3/service/client"
 	mconfig "github.com/micro/micro/v3/service/config"
-	ct "github.com/micro/micro/v3/service/context"
 	merrors "github.com/micro/micro/v3/service/errors"
 	logger "github.com/micro/micro/v3/service/logger"
 	mstore "github.com/micro/micro/v3/service/store"
@@ -159,24 +158,13 @@ func (e *Signup) sendVerificationEmail(ctx context.Context,
 	rsp *signup.SendVerificationEmailResponse) error {
 	logger.Info("Received Signup.SendVerificationEmail request")
 
-	custResp, err := e.customerService.Create(ct.DefaultContext, &cproto.CreateRequest{
-		Email: req.Email,
-	}, client.WithAuthToken())
-	if err != nil {
-		logger.Error(err)
-		merr, ok := err.(*merrors.Error)
-		if ok && merr.Id == "customers.create.exists" {
-			return merrors.BadRequest("signup", "Customer with this email address already exists")
-		}
-		return merrors.InternalServerError("signup.SendVerificationEmail", internalErrorMsg)
-	}
-
 	k := randStringBytesMaskImprSrc(8)
 	tok := &tokenToEmail{
-		Token:      k,
-		Email:      req.Email,
-		Created:    time.Now().Unix(),
-		CustomerID: custResp.Customer.Id,
+		Token:   k,
+		Email:   req.Email,
+		Created: time.Now().Unix(),
+		// @todo this is wrong
+		CustomerID: req.Email,
 	}
 
 	bytes, err := json.Marshal(tok)
@@ -265,16 +253,6 @@ func (e *Signup) verify(ctx context.Context, req *signup.VerifyRequest, rsp *sig
 
 	// set the response message
 	rsp.Message = fmt.Sprintf(e.config.PaymentMessage, req.Email)
-	// we require payment for any signup
-	// if not set the CLI will try complete signup without payment id
-	rsp.PaymentRequired = !e.config.NoPayment
-
-	if _, err := e.customerService.MarkVerified(ctx, &cproto.MarkVerifiedRequest{
-		Email: req.Email,
-	}, client.WithAuthToken()); err != nil {
-		logger.Errorf("Error when marking %v verified: %v", req.Email, err)
-		return merrors.InternalServerError("signup.Verify", internalErrorMsg)
-	}
 
 	rsp.Namespaces = []string{namespace}
 	rsp.CustomerID = tok.CustomerID
@@ -309,10 +287,6 @@ func (e *Signup) completeSignup(ctx context.Context, req *signup.CompleteSignupR
 	}
 	if tok.Token != req.Token { // not checking expiry here because we've already checked it during Verify() step
 		return merrors.Forbidden("signup.CompleteSignup.invalid_token", "The token you provided is incorrect")
-	}
-
-	if err := e.joinNamespace(ctx, tok.CustomerID, namespace); err != nil {
-		return err
 	}
 
 	rsp.Namespace = namespace
@@ -388,29 +362,4 @@ func (e *Signup) Recover(ctx context.Context, req *signup.RecoverRequest, rsp *s
 	}
 
 	return err
-}
-
-func (e *Signup) joinNamespace(ctx context.Context, customerID, ns string) error {
-	rsp, err := e.namespaceService.Read(ctx, &nproto.ReadRequest{
-		Id: ns,
-	}, client.WithAuthToken())
-	if err != nil {
-		logger.Errorf("Error reading namespace %v: %v", ns, err)
-		return merrors.InternalServerError("signup.CompleteSignup.join_namespace", internalErrorMsg)
-	}
-	ownerID := rsp.Namespace.Owners[0]
-	if !e.config.NoPayment {
-		_, err = e.subscriptionService.AddUser(ctx, &sproto.AddUserRequest{OwnerID: ownerID, NewUserID: customerID}, client.WithAuthToken())
-		if err != nil {
-			logger.Errorf("Error adding user to subscription %s", err)
-			return merrors.InternalServerError("signup.CompleteSignup.join_namespace", internalErrorMsg)
-		}
-	}
-	_, err = e.namespaceService.AddUser(ctx, &nproto.AddUserRequest{Namespace: ns, User: customerID}, client.WithAuthToken())
-	if err != nil {
-		logger.Errorf("Error adding user %v to namespace %s", customerID, err)
-		return merrors.InternalServerError("signup.CompleteSignup.join_amespace", internalErrorMsg)
-	}
-
-	return nil
 }
