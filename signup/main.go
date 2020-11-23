@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/m3o/backend/signup/handler"
+	"github.com/embedscript/backend/signup/handler"
 	"github.com/micro/micro/v3/service"
 	mauth "github.com/micro/micro/v3/service/auth/client"
 	log "github.com/micro/micro/v3/service/logger"

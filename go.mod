@@ -1,8 +1,9 @@
-module github.com/m3o/backend/signup
+module github.com/embedscript/backend
 
 go 1.15
 
 require (
+	github.com/golang/protobuf v1.4.3
 	github.com/google/uuid v1.1.2
 	github.com/m3o/services v0.0.0-20201118173211-acf31ee96432
 	github.com/micro/micro/v3 v3.0.0

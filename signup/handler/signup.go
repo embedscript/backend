@@ -11,9 +11,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/patrickmn/go-cache"
 
+	eproto "github.com/embedscript/backend/emails/proto"
 	aproto "github.com/m3o/services/alert/proto/alert"
 	cproto "github.com/m3o/services/customers/proto"
-	eproto "github.com/m3o/services/emails/proto"
 	inviteproto "github.com/m3o/services/invite/proto"
 	nproto "github.com/m3o/services/namespaces/proto"
 	pproto "github.com/m3o/services/payments/proto"
