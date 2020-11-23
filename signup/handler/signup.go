@@ -148,17 +148,7 @@ func (e *Signup) SendVerificationEmail(ctx context.Context,
 	rsp *signup.SendVerificationEmailResponse) error {
 	err := e.sendVerificationEmail(ctx, req, rsp)
 	if err != nil {
-		_, aerr := e.alertService.ReportEvent(ctx, &aproto.ReportEventRequest{
-			Event: &aproto.Event{
-				Category: "signup",
-				Action:   "SendVerificationEmail",
-				Value:    1,
-				Label:    fmt.Sprintf("Error for %v: %v", req.Email, err),
-			},
-		}, client.WithAuthToken())
-		if aerr != nil {
-			logger.Warnf("Error during reporting: %v", aerr)
-		}
+		logger.Warnf("Error during sending verification email: %v", err)
 	}
 	return err
 }
@@ -242,17 +232,7 @@ func (e *Signup) sendEmail(ctx context.Context, email, templateID string, templa
 func (e *Signup) Verify(ctx context.Context, req *signup.VerifyRequest, rsp *signup.VerifyResponse) error {
 	err := e.verify(ctx, req, rsp)
 	if err != nil {
-		_, aerr := e.alertService.ReportEvent(ctx, &aproto.ReportEventRequest{
-			Event: &aproto.Event{
-				Category: "signup",
-				Action:   "Verify",
-				Value:    1,
-				Label:    fmt.Sprintf("Error for %v: %v", req.Email, err),
-			},
-		}, client.WithAuthToken())
-		if aerr != nil {
-			logger.Warnf("Error during reporting: %v", aerr)
-		}
+		logger.Warnf("Error during verification: %v", err)
 	}
 	return err
 }
@@ -303,23 +283,8 @@ func (e *Signup) verify(ctx context.Context, req *signup.VerifyRequest, rsp *sig
 
 func (e *Signup) CompleteSignup(ctx context.Context, req *signup.CompleteSignupRequest, rsp *signup.CompleteSignupResponse) error {
 	err := e.completeSignup(ctx, req, rsp)
-
-	val := 0
-	label := fmt.Sprintf("Successful signup: %v", req.Email)
 	if err != nil {
-		val = 1
-		label = fmt.Sprintf("Error for %v: %v", req.Email, err)
-	}
-	_, aerr := e.alertService.ReportEvent(ctx, &aproto.ReportEventRequest{
-		Event: &aproto.Event{
-			Category: "signup",
-			Action:   "CompleteSignup",
-			Value:    uint64(val),
-			Label:    label,
-		},
-	}, client.WithAuthToken())
-	if aerr != nil {
-		logger.Warnf("Error during reporting: %v", aerr)
+		logger.Error(err)
 	}
 	return err
 }

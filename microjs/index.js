@@ -131,6 +131,7 @@ function initModal() {
       },
       function (rsp) {
         if (!rsp && !rsp.token) {
+          console.log("Response doesn't look right");
           return;
         }
         setCookie("micro_access", rsp.token.access_token, 30);
@@ -138,6 +139,20 @@ function initModal() {
         setCookie("micro_expiry", rsp.token.expiry, 30);
         // hide modal display if things are all good
         modal.style.display = "none";
+      }
+    );
+  };
+
+  var registerButton = document.getElementById("registerButton");
+  registerButton.onclick = function () {
+    Micro.post(
+      "signup/sendVerificationEmail",
+      "backend",
+      {
+        email: document.getElementById("emailInput").value,
+      },
+      function (rsp) {
+        console.log(rsp);
       }
     );
   };
@@ -159,8 +174,10 @@ function initModal() {
     }
   };
 
-  Micro["popup"] = function () {
-    btn.click();
+  Micro["requireLogin"] = function () {
+    if (!getCookie("micro_refresh")) {
+      btn.click();
+    }
   };
 }
 

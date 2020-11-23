@@ -151,6 +151,45 @@
     letter-spacing: 1px;
     cursor: pointer;
   }
+
+  form .register-btn {
+    margin: 30px 0;
+    height: 45px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  form .register-btn .inner {
+    height: 100%;
+    width: 300%;
+    position: absolute;
+    left: -100%;
+    z-index: -1;
+    background: -webkit-linear-gradient(
+      right,
+      #eaec4e,
+      #56d8e4,
+      #eaec4e,
+      #56d8e4
+    );
+    transition: all 0.4s;
+  }
+  form .register-btn:hover .inner {
+    left: 0;
+  }
+  form .register-btn button {
+    height: 100%;
+    width: 100%;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
+
   form .signup-link {
     text-align: center;
   }
@@ -177,10 +216,10 @@
       <label for="show" class="show-btn">View Form</label>
       <div class="container">
         <label for="show" class="close-btn fas fa-times" title="close"></label>
-        <div class="text">Login Form</div>
+        <div class="text">Login</div>
         <form action="#">
           <div class="data">
-            <label>Email or Phone</label>
+            <label>Email</label>
             <input id="emailInput" type="text" required />
           </div>
           <div class="data">
@@ -193,6 +232,10 @@
           <div class="btn">
             <div class="inner"></div>
             <button id="loginButton" type="button">login</button>
+          </div>
+          <div class="register-btn">
+            <div class="inner"></div>
+            <button id="registerButton" type="button">register</button>
           </div>
           <div class="signup-link">
             Not a member? <a href="#">Signup now</a>
