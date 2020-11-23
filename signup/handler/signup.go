@@ -23,6 +23,7 @@ import (
 	"github.com/micro/micro/v3/service/auth"
 	"github.com/micro/micro/v3/service/client"
 	mconfig "github.com/micro/micro/v3/service/config"
+	ct "github.com/micro/micro/v3/service/context"
 	merrors "github.com/micro/micro/v3/service/errors"
 	logger "github.com/micro/micro/v3/service/logger"
 	mstore "github.com/micro/micro/v3/service/store"
@@ -158,7 +159,7 @@ func (e *Signup) sendVerificationEmail(ctx context.Context,
 	rsp *signup.SendVerificationEmailResponse) error {
 	logger.Info("Received Signup.SendVerificationEmail request")
 
-	custResp, err := e.customerService.Create(ctx, &cproto.CreateRequest{
+	custResp, err := e.customerService.Create(ct.DefaultContext, &cproto.CreateRequest{
 		Email: req.Email,
 	}, client.WithAuthToken())
 	if err != nil {
