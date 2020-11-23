@@ -56,7 +56,7 @@ func (e *Emails) Send(ctx context.Context, request *emails.SendRequest, response
 	acc, ok := mauth.AccountFromContext(ctx)
 	if !ok || acc.Type != "service" {
 		if ok {
-			log.Infof("Account type %v", acc.Type)
+			log.Infof("Account type %v, scopes %v, id %v", acc.Type, acc.Scopes, acc.ID)
 		} else {
 			log.Infof("No account found")
 		}
