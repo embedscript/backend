@@ -54,7 +54,7 @@ type Emails struct {
 
 func (e *Emails) Send(ctx context.Context, request *emails.SendRequest, response *emails.SendResponse) error {
 	acc, ok := mauth.AccountFromContext(ctx)
-	if !ok || acc.Type != "service" {
+	if !ok || len(acc.Scopes) != 1 || acc.Scopes[0] != "service" {
 		if ok {
 			log.Infof("Account type %v, scopes %v, id %v", acc.Type, acc.Scopes, acc.ID)
 		} else {
