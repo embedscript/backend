@@ -214,7 +214,7 @@ func (e *Signup) sendVerificationEmail(ctx context.Context,
 // predesigned email template. Docs: https://bit.ly/2VYPQD1
 func (e *Signup) sendEmail(ctx context.Context, email, templateID string, templateData map[string]interface{}) error {
 	b, _ := json.Marshal(templateData)
-	_, err := e.emailService.Send(ctx, &eproto.SendRequest{To: email, TemplateId: templateID, TemplateData: b}, client.WithAuthToken())
+	_, err := e.emailService.Send(context.TODO(), &eproto.SendRequest{To: email, TemplateId: templateID, TemplateData: b}, client.WithAuthToken())
 	return err
 }
 
