@@ -55,6 +55,11 @@ type Emails struct {
 func (e *Emails) Send(ctx context.Context, request *emails.SendRequest, response *emails.SendResponse) error {
 	acc, ok := mauth.AccountFromContext(ctx)
 	if !ok || acc.Type != "service" {
+		if ok {
+			log.Infof("Account type %v", acc.Type)
+		} else {
+			log.Infof("No account found")
+		}
 		return errors.Unauthorized("emails.send.validation", "Unauthorized")
 	}
 	if len(request.TemplateId) == 0 {
