@@ -70,8 +70,8 @@ function listenCookieChange(callback, interval = 1000) {
 function get(path, namespace, params, callback) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
-    if (xmlHttp.readyState == 4 && xmlHttp.status == 200);
-    callback(JSON.parse(xmlHttp.responseText));
+    if (xmlHttp.readyState == 4);
+    callback(JSON.parse(xmlHttp.responseText), xmlHttp.status);
   };
   xmlHttp.open(
     "GET",
@@ -85,8 +85,8 @@ function get(path, namespace, params, callback) {
 function post(path, namespace, params, callback) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
-    if (xmlHttp.readyState == 4 && xmlHttp.status == 200);
-    callback(JSON.parse(xmlHttp.responseText));
+    if (xmlHttp.readyState == 4);
+    callback(JSON.parse(xmlHttp.responseText), xmlHttp.status);
   };
   xmlHttp.open("POST", "https://api.m3o.dev/" + path, true); // true for asynchronous
   xmlHttp.setRequestHeader("micro-namespace", namespace);
@@ -133,6 +133,7 @@ function initModal() {
   // Get the button that opens the modal
   var loginButton = document.getElementById("loginButton");
   loginButton.onclick = function () {
+    document.getElementById("errors").style.display = "none";
     Micro.post(
       "auth/Auth/Token",
       "micro",
@@ -143,7 +144,13 @@ function initModal() {
           namespace: "backend",
         },
       },
-      function (rsp) {
+      function (rsp, status) {
+        if (status > 299) {
+          document.getElementById("errors").innerHTML = rsp.Detail;
+          document.getElementById("errors").style.display = "block";
+          return;
+        }
+
         if (!rsp && !rsp.token) {
           console.log("Response doesn't look right");
           return;
@@ -159,14 +166,20 @@ function initModal() {
 
   var registerButton = document.getElementById("registerButton");
   registerButton.onclick = function () {
+    document.getElementById("errors").style.display = "none";
     Micro.post(
       "signup/sendVerificationEmail",
       "backend",
       {
         email: document.getElementById("emailInput").value,
       },
-      function (rsp) {
-        // @todo handle errors
+      function (rsp, status) {
+        if (status > 299) {
+          document.getElementById("errors").innerHTML = rsp.Detail;
+          document.getElementById("errors").style.display = "block";
+          return;
+        }
+
         document.getElementById("loginSection").style.display = "none";
         document.getElementById("registerSection").style.display = "none";
         document.getElementById("verifySection").style.display = "block";
@@ -177,6 +190,7 @@ function initModal() {
 
   var verifyButton = document.getElementById("verifyButton");
   verifyButton.onclick = function () {
+    document.getElementById("errors").style.display = "none";
     Micro.post(
       "signup/completeSignup",
       "backend",
@@ -186,7 +200,12 @@ function initModal() {
         token: document.getElementById("verifyInput").value,
         namespace: "backend",
       },
-      function (rsp) {
+      function (rsp, status) {
+        if (status > 299) {
+          document.getElementById("errors").innerHTML = rsp.Detail;
+          document.getElementById("errors").style.display = "block";
+          return;
+        }
         if (!rsp && !rsp.token) {
           console.log("Response doesn't look right");
           return;
