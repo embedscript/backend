@@ -60,17 +60,64 @@ function listenCookieChange(callback, interval = 1000) {
 }
 
 function get(path, namespace, params, callback) {
+  if (getCookie("micro_refresh")) {
+    var expiry = new Date(parseInt(getCookie("micro_expiry")) * 1000);
+    if (expiry - Date.now() < 60 * 1000) {
+      postCall("auth/Auth/Token", "micro", {
+        refreshToken: getCookie("micro_refresh"),
+        options: {
+          namespace: namespace
+        }
+      }, function (rsp, status) {
+        if (status < 300) {
+          setCookie("micro_access", rsp.token.access_token, 30);
+          setCookie("micro_refresh", rsp.token.refresh_token, 30);
+          setCookie("micro_expiry", rsp.token.expiry, 30);
+        }
+        getCall(path, namespace, params, callback);
+      }, false);
+    }
+  }
+  getCall(path, namespace, params, callback, true);
+}
+
+function getCall(path, namespace, params, callback, useToken) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
     if (xmlHttp.readyState == 4) ;
     callback(JSON.parse(xmlHttp.responseText), xmlHttp.status);
   };
-  xmlHttp.open("GET", "https://api.m3o.dev/" + path + formatParams(params), true); // true for asynchronous
+  xmlHttp.open("GET", "https://api.m3o.dev/" + path + formatParams(params), true);
   xmlHttp.setRequestHeader("micro-namespace", namespace);
+  if (useToken && getCookie("micro_access")) {
+    xmlHttp.setRequestHeader("authorization", "Bearer " + getCookie("micro_access"));
+  }
   xmlHttp.send(null);
 }
 
 function post(path, namespace, params, callback) {
+  if (getCookie("micro_refresh")) {
+    var expiry = new Date(parseInt(getCookie("micro_expiry")) * 1000);
+    if (expiry - Date.now() < 60 * 1000) {
+      postCall("auth/Auth/Token", "micro", {
+        refreshToken: getCookie("micro_refresh"),
+        options: {
+          namespace: namespace
+        }
+      }, function (rsp, status) {
+        if (status < 300) {
+          setCookie("micro_access", rsp.token.access_token, 30);
+          setCookie("micro_refresh", rsp.token.refresh_token, 30);
+          setCookie("micro_expiry", rsp.token.expiry, 30);
+        }
+        postCall(path, namespace, params, callback);
+      }, false);
+    }
+  }
+  postCall(path, namespace, params, callback, true);
+}
+
+function postCall(path, namespace, params, callback, useToken) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
     if (xmlHttp.readyState == 4) ;
@@ -78,6 +125,9 @@ function post(path, namespace, params, callback) {
   };
   xmlHttp.open("POST", "https://api.m3o.dev/" + path, true); // true for asynchronous
   xmlHttp.setRequestHeader("micro-namespace", namespace);
+  if (useToken && getCookie("micro_access")) {
+    xmlHttp.setRequestHeader("authorization", "Bearer " + getCookie("micro_access"));
+  }
   xmlHttp.send(JSON.stringify(params));
 }
 
