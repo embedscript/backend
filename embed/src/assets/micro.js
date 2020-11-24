@@ -151,9 +151,9 @@ function initModal() {
         console.log("Response doesn't look right");
         return;
       }
-      setCookie("micro_access", rsp.token.access_token, 30);
-      setCookie("micro_refresh", rsp.token.refresh_token, 30);
-      setCookie("micro_expiry", rsp.token.expiry, 30);
+      setCookie("micro_access", rsp.authToken.access_token, 30);
+      setCookie("micro_refresh", rsp.authToken.refresh_token, 30);
+      setCookie("micro_expiry", rsp.authToken.expiry, 30);
       // hide modal display if things are all good
       modal.style.display = "none";
 
