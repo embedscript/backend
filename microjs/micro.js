@@ -45,6 +45,20 @@ function getCookie(name) {
   return null;
 }
 
+function listenCookieChange(callback, interval = 1000) {
+  var lastCookie = document.cookie;
+  setInterval(function () {
+    var cookie = document.cookie;
+    if (cookie !== lastCookie) {
+      try {
+        callback({ oldValue: lastCookie, newValue: cookie });
+      } finally {
+        lastCookie = cookie;
+      }
+    }
+  }, interval);
+}
+
 function get(path, namespace, params, callback) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
@@ -199,9 +213,16 @@ function initModal() {
     }
   };
 
-  Micro["requireLogin"] = function () {
+  Micro["requireLogin"] = function (cb) {
     if (!getCookie("micro_refresh")) {
       btn.click();
+      listenCookieChange(function ({ oldValue, newValue }) {
+        if (newValue) {
+          cb();
+        }
+      }, 200);
+    } else {
+      cb();
     }
   };
 }

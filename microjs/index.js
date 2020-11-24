@@ -53,6 +53,20 @@ function eraseCookie(name) {
   document.cookie = name + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
 }
 
+function listenCookieChange(callback, interval = 1000) {
+  let lastCookie = document.cookie;
+  setInterval(() => {
+    let cookie = document.cookie;
+    if (cookie !== lastCookie) {
+      try {
+        callback({ oldValue: lastCookie, newValue: cookie });
+      } finally {
+        lastCookie = cookie;
+      }
+    }
+  }, interval);
+}
+
 function get(path, namespace, params, callback) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
@@ -226,9 +240,16 @@ function initModal() {
     }
   };
 
-  Micro["requireLogin"] = function () {
+  Micro["requireLogin"] = function (cb) {
     if (!getCookie("micro_refresh")) {
       btn.click();
+      listenCookieChange(({ oldValue, newValue }) => {
+        if (newValue) {
+          cb();
+        }
+      }, 200);
+    } else {
+      cb();
     }
   };
 }
