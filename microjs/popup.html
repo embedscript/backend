@@ -226,19 +226,38 @@
             <label>Password</label>
             <input id="passwordInput" type="password" required />
           </div>
-          <div class="forgot-pass">
+          <div id="forgotPassword" class="forgot-pass">
             <a href="#">Forgot Password?</a>
           </div>
-          <div class="btn">
+          <div id="loginSection" class="btn">
             <div class="inner"></div>
             <button id="loginButton" type="button">login</button>
           </div>
-          <div class="register-btn">
+          <div id="registerSection" style="display: none" class="register-btn">
             <div class="inner"></div>
             <button id="registerButton" type="button">register</button>
           </div>
-          <div class="signup-link">
-            Not a member? <a href="#">Signup now</a>
+          <div id="verifySection" style="display: none">
+            <div class="data">
+              We have sent you a verification code in email, please enter it
+              here:
+              <input id="verifyInput" type="text" required />
+            </div>
+            <div class="register-btn">
+              <div class="inner"></div>
+              <button id="verifyButton" type="button">verify</button>
+            </div>
+          </div>
+          <div id="signupSwitcherSection" class="signup-link">
+            Not a member? <a id="signupSwitcher" href="#">Signup now</a>
+          </div>
+          <div
+            id="loginSwitcherSection"
+            style="display: none"
+            class="signup-link"
+          >
+            &larr; Already have an account?
+            <a id="loginSwitcher" href="#">Login now</a>
           </div>
         </form>
       </div>

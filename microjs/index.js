@@ -152,9 +152,61 @@ function initModal() {
         email: document.getElementById("emailInput").value,
       },
       function (rsp) {
-        console.log(rsp);
+        // @todo handle errors
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("registerSection").style.display = "none";
+        document.getElementById("verifySection").style.display = "block";
+        document.getElementById("loginSwitcherSection").style.display = "none";
       }
     );
+  };
+
+  var verifyButton = document.getElementById("verifyButton");
+  verifyButton.onclick = function () {
+    Micro.post(
+      "signup/completeSignup",
+      "backend",
+      {
+        email: document.getElementById("emailInput").value,
+        secret: document.getElementById("passwordInput").value,
+        token: document.getElementById("verifyInput").value,
+        namespace: "backend",
+      },
+      function (rsp) {
+        if (!rsp && !rsp.token) {
+          console.log("Response doesn't look right");
+          return;
+        }
+        setCookie("micro_access", rsp.token.access_token, 30);
+        setCookie("micro_refresh", rsp.token.refresh_token, 30);
+        setCookie("micro_expiry", rsp.token.expiry, 30);
+        // hide modal display if things are all good
+        modal.style.display = "none";
+
+        // @todo handle errors
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("registerSection").style.display = "none";
+        document.getElementById("verifySection").style.display = "block";
+      }
+    );
+  };
+
+  var signupSwitcher = document.getElementById("signupSwitcher");
+  signupSwitcher.onclick = function () {
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("registerSection").style.display = "block";
+    document.getElementById("loginSwitcherSection").style.display = "block";
+    document.getElementById("signupSwitcherSection").style.display = "none";
+    document.getElementById("forgotPassword").style.display = "none";
+  };
+
+  var loginSwitcher = document.getElementById("loginSwitcher");
+  loginSwitcher.onclick = function () {
+    document.getElementById("loginSection").style.display = "block";
+    document.getElementById("registerSection").style.display = "none";
+    document.getElementById("loginSwitcherSection").style.display = "none";
+    document.getElementById("signupSwitcherSection").style.display = "block";
+    document.getElementById("forgotPassword").style.display = "block";
   };
 
   // When the user clicks the button, open the modal
