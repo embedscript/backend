@@ -92,7 +92,7 @@ function get(path, namespace, params, callback) {
       );
     }
   }
-  getCall(path, namespace, params, callback, true)
+  getCall(path, namespace, params, callback, true);
 }
 
 function getCall(path, namespace, params, callback, useToken) {

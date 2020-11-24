@@ -3,9 +3,11 @@
   <body>
     <script src="https://determined-shaw-741e5d.netlify.app/assets/micro.js"></script>
     <script>
-      Micro.requireLogin(function () {
-        alert("hi there!");
-      });
+	Micro.requireLogin(function() {
+		alert("hi there!");
+		Micro.get("helloworld", "backend", {"name":"Janos"})
+	});
     </script>
   </body>
 </html>
+
