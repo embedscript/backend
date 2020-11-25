@@ -166,7 +166,7 @@ func (p *Posts) Save(ctx context.Context, req *proto.SaveRequest, rsp *proto.Sav
 }
 
 func (p *Posts) savePost(ctx context.Context, oldPost, post *proto.Post) error {
-	err := getPostModel(post.Website).Save(post)
+	err := getPostModel(post.Website).Save(*post)
 	return err
 	// @todo do not save tags for now
 	if err != nil {
