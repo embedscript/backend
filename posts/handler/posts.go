@@ -10,6 +10,7 @@ import (
 	"github.com/micro/micro/v3/service/store"
 
 	"github.com/micro/dev/model"
+	"github.com/teris-io/shortid"
 
 	proto "github.com/embedscript/backend/posts/proto"
 	tags "github.com/embedscript/backend/tags/proto"
@@ -93,6 +94,9 @@ func (p *Posts) Save(ctx context.Context, req *proto.SaveRequest, rsp *proto.Sav
 			return errors.Unauthorized("proto.save.input-check", "Not authorized")
 		}
 	}
+	if len(req.Id) == 0 {
+		req.Id = shortid.MustGenerate()
+	}
 
 	// read by post
 	posts := []*proto.Post{}
@@ -114,6 +118,7 @@ func (p *Posts) Save(ctx context.Context, req *proto.SaveRequest, rsp *proto.Sav
 			Created:  time.Now().Unix(),
 			Metadata: req.Metadata,
 			Image:    req.Image,
+			Website:  req.Website,
 		}
 		err := p.savePost(ctx, nil, post)
 		if err != nil {
@@ -133,6 +138,7 @@ func (p *Posts) Save(ctx context.Context, req *proto.SaveRequest, rsp *proto.Sav
 		Updated:  time.Now().Unix(),
 		Metadata: req.Metadata,
 		Image:    req.Image,
+		Website:  req.Website,
 	}
 	if len(req.Title) > 0 {
 		post.Title = req.Title
