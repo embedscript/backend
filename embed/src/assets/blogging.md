@@ -6,19 +6,22 @@ The `Blogging Embed` turns your static site into a dynamic blog with a few widge
 ```html
 <div id="content"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.0/mustache.js"></script>
 <script src="https://determined-shaw-741e5d.netlify.app/assets/micro.js"></script>
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function(event) {
     var template = '{{#posts}}<h1><a href="/post?id={{id}}">{{title}}<a/></h1>{{/posts}}';
 
-    Micro.get("posts/query", "backend", {}, function(data) {
+    Micro.get("posts/query", "backend", {
+      "website:" "example.com",
+    }, function(data) {
       var result = Mustache.render(template, data);
       document.getElementById("content").innerHTML = result;
     })
   });
 </script>
 ```
-[JSFiddle]
+[JSFiddle]()
 
 <br /><br />
 # Get single post
@@ -32,6 +35,39 @@ Get a single post. The below snippet uses the query parameters of your page to l
 <script src="https://determined-shaw-741e5d.netlify.app/assets/micro.js"></script>
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function(event) {
+    var template = `
+      <input id="title"><br /><br />
+      <textarea id="content"></textarea><br /><br />
+      <button id="save-button" type="button">Save</button>
+    `;
+    document.getElementById("content").innerHTML = template;
+
+    document.getElementById("save-button").onclick = function() {
+      Micro.requireLogin(function() {
+        Micro.post("posts/save", "backend", {
+          "website": "example.com",
+          "id": "test-id",
+          "title": document.getElementById("title").value,
+          "content": document.getElementById("content").value,
+        }, function(data) {
+          console.log("Successfully saved.")
+        })
+      })
+    }
+  });
+</script>
+```
+
+# Save post
+
+```html
+<div id="content"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.0/mustache.js"></script>
+<script src="https://determined-shaw-741e5d.netlify.app/assets/micro.js"></script>
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function(event) {
+    document.getElementById("content").innerHTML = result;
     var template = '{{#posts}}<h1>{{title}}</h1>{{/posts}}';
 
     Micro.get("posts/query", "backend", {"id":Micro.params()["id"]}, function(data) {
@@ -41,3 +77,5 @@ Get a single post. The below snippet uses the query parameters of your page to l
   });
 </script>
 ```
+
+# Edit post

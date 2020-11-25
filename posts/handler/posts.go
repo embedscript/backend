@@ -74,10 +74,13 @@ func (p *Posts) Save(ctx context.Context, req *proto.SaveRequest, rsp *proto.Sav
 	}
 	if len(websites) == 0 {
 		// allow save, tie website to user account
-		p.websites.Save(Website{
+		err = p.websites.Save(Website{
 			ID:      req.Website,
 			OwnerID: acc.ID,
 		})
+		if err != nil {
+			return err
+		}
 	} else {
 		if websites[0].OwnerID != acc.ID {
 			return errors.Unauthorized("proto.save.input-check", "Not authorized")
@@ -86,7 +89,7 @@ func (p *Posts) Save(ctx context.Context, req *proto.SaveRequest, rsp *proto.Sav
 
 	// read by post
 	posts := []*proto.Post{}
-	q := model.Equals("id", req.Id)
+	q := model.Equals("ID", req.Id)
 	q.Order.Type = model.OrderTypeUnordered
 	err = getPostModel(req.Website).List(q, &posts)
 	if err != nil {
