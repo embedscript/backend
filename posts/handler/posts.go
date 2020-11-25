@@ -36,7 +36,7 @@ func getPostModel(website string) model.Model {
 
 type Website struct {
 	// website url eg. example.com
-	ID      string
+	Id      string
 	OwnerID string
 }
 
@@ -50,7 +50,7 @@ func NewPosts(tagsService tags.TagsService) *Posts {
 	createdIndex := model.ByEquality("created")
 	createdIndex.Order.Type = model.OrderTypeDesc
 
-	websiteIDIndex := model.ByEquality("ID")
+	websiteIDIndex := model.ByEquality("Id")
 	websiteIDIndex.Order.Type = model.OrderTypeUnordered
 
 	return &Posts{
@@ -89,7 +89,7 @@ func (p *Posts) Save(ctx context.Context, req *proto.SaveRequest, rsp *proto.Sav
 
 	// read by post
 	posts := []*proto.Post{}
-	q := model.Equals("ID", req.Id)
+	q := model.Equals("Id", req.Id)
 	q.Order.Type = model.OrderTypeUnordered
 	err = getPostModel(req.Website).List(q, &posts)
 	if err != nil {
@@ -229,7 +229,7 @@ func (p *Posts) Query(ctx context.Context, req *proto.QueryRequest, rsp *proto.Q
 		q = model.Equals("slug", req.Slug)
 	} else if len(req.Id) > 0 {
 		logger.Infof("Reading post by id: %v", req.Id)
-		q = model.Equals("id", req.Id)
+		q = model.Equals("Id", req.Id)
 		q.Order.Type = model.OrderTypeUnordered
 	} else {
 		q = model.Equals("created", nil)
@@ -249,7 +249,7 @@ func (p *Posts) Query(ctx context.Context, req *proto.QueryRequest, rsp *proto.Q
 
 func (p *Posts) Delete(ctx context.Context, req *proto.DeleteRequest, rsp *proto.DeleteResponse) error {
 	logger.Info("Received Post.Delete request")
-	q := model.Equals("id", req.Id)
+	q := model.Equals("Id", req.Id)
 	q.Order.Type = model.OrderTypeUnordered
 	return getPostModel(req.Website).Delete(q)
 }
