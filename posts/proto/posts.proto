@@ -20,6 +20,7 @@ message Post {
 	repeated string tags = 8;
 	map<string,string> metadata = 9;
 	string image = 19;
+	string website = 20;
 }
 
 // Query posts. Acts as a listing when no id or slug provided.
@@ -30,6 +31,7 @@ message QueryRequest {
 	string tag = 3;
 	int64 offset = 4;
 	int64 limit = 5;
+	string website = 6;
 }
 
 message QueryResponse {
@@ -47,6 +49,7 @@ message SaveRequest {
 	repeated string tags = 6;
 	map<string,string> metadata = 7;
 	string image = 8;
+	string website = 9;
 }
 
 message SaveResponse {
@@ -55,7 +58,9 @@ message SaveResponse {
 
 message DeleteRequest {
 	string id = 1;
+	string website = 2;
 }
 
-message DeleteResponse {}
+message DeleteResponse {	
+}
 

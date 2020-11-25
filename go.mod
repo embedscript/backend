@@ -8,6 +8,7 @@ require (
 	github.com/gosimple/slug v1.9.0
 	github.com/m3o/services v0.0.0-20201118173211-acf31ee96432
 	github.com/micro/dev v0.0.0-20201117163752-d3cfc9788dfa
+	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/micro/v3 v3.0.0
 	github.com/micro/services v0.14.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
