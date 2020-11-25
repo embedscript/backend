@@ -75,7 +75,7 @@ func (p *Posts) Save(ctx context.Context, req *proto.SaveRequest, rsp *proto.Sav
 	if len(websites) == 0 {
 		// allow save, tie website to user account
 		err = p.websites.Save(Website{
-			ID:      req.Website,
+			Id:      req.Website,
 			OwnerID: acc.ID,
 		})
 		if err != nil {
