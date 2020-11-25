@@ -23,6 +23,9 @@ const (
 func getPostModel(website string) model.Model {
 	createdIndex := model.ByEquality("created")
 	createdIndex.Order.Type = model.OrderTypeDesc
+	idIndex := model.ByEquality("Id")
+	idIndex.Order.Type = model.OrderTypeUnordered
+
 	return model.New(
 		store.DefaultStore,
 		proto.Post{},
@@ -30,6 +33,7 @@ func getPostModel(website string) model.Model {
 		&model.ModelOptions{
 			Debug:     false,
 			Namespace: website,
+			IdIndex:   idIndex,
 		},
 	)
 }
