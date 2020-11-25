@@ -71,6 +71,9 @@ func (p *Posts) Save(ctx context.Context, req *proto.SaveRequest, rsp *proto.Sav
 	if !ok {
 		return errors.Unauthorized("proto.save.input-check", "Not logged in")
 	}
+	if len(req.Website) == 0 {
+		return errors.Unauthorized("proto.save.input-check", "Website missing")
+	}
 	websites := []Website{}
 	err := p.websites.List(p.websiteIDIndex.ToQuery(req.Website), &websites)
 	if err != nil {
@@ -227,6 +230,10 @@ func (p *Posts) diffTags(ctx context.Context, parentID string, oldTagNames, newT
 }
 
 func (p *Posts) Query(ctx context.Context, req *proto.QueryRequest, rsp *proto.QueryResponse) error {
+	if len(req.Website) == 0 {
+		return errors.Unauthorized("proto.save.input-check", "Website missing")
+	}
+
 	var q model.Query
 	if len(req.Slug) > 0 {
 		logger.Infof("Reading post by slug: %v", req.Slug)
@@ -252,6 +259,9 @@ func (p *Posts) Query(ctx context.Context, req *proto.QueryRequest, rsp *proto.Q
 }
 
 func (p *Posts) Delete(ctx context.Context, req *proto.DeleteRequest, rsp *proto.DeleteResponse) error {
+	if len(req.Website) == 0 {
+		return errors.Unauthorized("proto.save.input-check", "Website missing")
+	}
 	logger.Info("Received Post.Delete request")
 	q := model.Equals("Id", req.Id)
 	q.Order.Type = model.OrderTypeUnordered

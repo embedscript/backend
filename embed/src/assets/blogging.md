@@ -13,7 +13,7 @@ The `Blogging Embed` turns your static site into a dynamic blog with a few widge
     var template = '{{#posts}}<h1><a href="/post?id={{id}}">{{title}}<a/></h1>{{/posts}}';
 
     Micro.get("posts/query", "backend", {
-      "website:" "example.com",
+      "website": "example.com",
     }, function(data) {
       var result = Mustache.render(template, data);
       document.getElementById("content").innerHTML = result;
