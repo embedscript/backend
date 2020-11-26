@@ -40,26 +40,22 @@ Get a single post. The below snippet uses the query parameters of your page to l
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.0/mustache.js"></script>
 <script src="https://determined-shaw-741e5d.netlify.app/assets/micro.js"></script>
 <script type="text/javascript">
-  document.addEventListener("DOMContentLoaded", function(event) {
-    var template = `
-      <input id="title"><br /><br />
-      <textarea id="content"></textarea><br /><br />
-      <button id="save-button" type="button">Save</button>
-    `;
-    document.getElementById("content").innerHTML = template;
+  document.addEventListener("DOMContentLoaded", function (event) {
+    var template =
+      '{{#posts}}<h2><a href="/post?id={{id}}">{{title}}<a/></h2>{{/posts}}';
 
-    document.getElementById("save-button").onclick = function() {
-      Micro.requireLogin(function() {
-        Micro.post("posts/save", "backend", {
-          "website": "example.com",
-          "id": "test-id",
-          "title": document.getElementById("title").value,
-          "content": document.getElementById("content").value,
-        }, function(data) {
-          console.log("Successfully saved.")
-        })
-      })
-    }
+    Micro.post(
+      "posts/query",
+      "backend",
+      {
+        website: "example.com",
+        id: Micro.params()["postID"],
+      },
+      function (data) {
+        var result = Mustache.render(template, data);
+        document.getElementById("content").innerHTML = result;
+      }
+    );
   });
 </script>
 ```
