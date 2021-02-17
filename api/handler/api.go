@@ -31,7 +31,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	if len(resp.Files) == 0 {
 		return errors.New("not found")
 	}
-	logger.Infof("%v files found for %v, length %v", len(resp.Files), project, len(resp.Files[0].FileContents))
+	logger.Infof("%v files found for %v, length %v, title %v", len(resp.Files), project, len(resp.Files[0].FileContents), resp.Files[0].Name)
 	// ? huh
 	rsp.Header = make(map[string]*pb.Pair)
 	rsp.Header["Content-Type"] = &pb.Pair{
