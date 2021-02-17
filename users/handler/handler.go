@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/embedscript/backend/users/domain"
+	pb "github.com/embedscript/backend/users/proto"
 	"github.com/micro/micro/v3/service/errors"
-	"github.com/micro/services/users/domain"
-	pb "github.com/micro/services/users/proto"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/net/context"
 )
