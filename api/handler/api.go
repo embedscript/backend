@@ -17,8 +17,11 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	files := filesproto.NewFilesService("files", client.DefaultClient)
 	logger.Infof("Serving %v", req.Path)
 
+	if len(req.Get) == 0 || len(req.Get["project"].Values) == 0 {
+		return errors.New("bad request")
+	}
 	resp, err := files.List(ctx, &filesproto.ListRequest{
-		Project: req.Path,
+		Project: req.Get["project"].Values[0],
 	})
 	if err != nil {
 		return err
