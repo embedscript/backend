@@ -24,6 +24,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	}
 
 	// ? huh
+	rsp.Header = make(map[string]*pb.Pair)
 	rsp.Header["Content-Type"] = &pb.Pair{
 		Key:    "Content-Type",
 		Values: []string{"text/html", "charset=UTF-8"},
