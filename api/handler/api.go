@@ -15,13 +15,15 @@ type V1 struct{}
 
 func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error {
 	files := filesproto.NewFilesService("files", client.DefaultClient)
-	logger.Infof("Serving %v", req.Path)
 
 	if len(req.Get) == 0 || len(req.Get["project"].Values) == 0 {
 		return errors.New("bad request")
 	}
+	project := req.Get["project"].Values[0]
+	logger.Infof("Serving %v", project)
+
 	resp, err := files.List(ctx, &filesproto.ListRequest{
-		Project: req.Get["project"].Values[0],
+		Project: project,
 	})
 	if err != nil {
 		return err
