@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
 	"strings"
 
 	pb "github.com/micro/micro/v3/proto/api"
@@ -22,7 +23,9 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	if err != nil {
 		return err
 	}
-
+	if len(resp.Files) == 0 {
+		return errors.New("not found")
+	}
 	// ? huh
 	rsp.Header = make(map[string]*pb.Pair)
 	rsp.Header["Content-Type"] = &pb.Pair{
