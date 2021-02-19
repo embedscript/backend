@@ -44,14 +44,23 @@ func (e *V1) ServeInOne(ctx context.Context, req *pb.Request, rsp *pb.Response) 
 
 func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error {
 	files := filesproto.NewFilesService("files", client.DefaultClient)
-	logger.Infof("Serving %v", req.Path)
+
+	if len(req.Get) == 0 || len(req.Get["project"].Values) == 0 {
+		return errors.New("bad request")
+	}
+	project := req.Get["project"].Values[0]
+	logger.Infof("Serving %v", project)
 
 	resp, err := files.List(ctx, &filesproto.ListRequest{
-		Project: req.Path,
+		Project: project,
 	})
 	if err != nil {
 		return err
 	}
+	if len(resp.Files) == 0 {
+		return errors.New("not found")
+	}
+
 	htmlFile := ""
 	jsFile := ""
 	cssFile := ""
@@ -74,7 +83,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		jsFile +
 		`</script></body></html>`
 
-	// ? huh
+	rsp.Header = make(map[string]*pb.Pair)
 	rsp.Header["Content-Type"] = &pb.Pair{
 		Key:    "Content-Type",
 		Values: []string{"text/html", "charset=UTF-8"},
