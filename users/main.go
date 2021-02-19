@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/embedscript/backend/users/handler"
+	proto "github.com/embedscript/backend/users/proto"
 	"github.com/micro/micro/v3/service"
 	"github.com/micro/micro/v3/service/logger"
-	"github.com/micro/services/users/handler"
-	proto "github.com/micro/services/users/proto"
 )
 
 func main() {
