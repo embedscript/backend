@@ -13,7 +13,7 @@ import (
 
 type V1 struct{}
 
-func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error {
+func (e *V1) ServeInOne(ctx context.Context, req *pb.Request, rsp *pb.Response) error {
 	files := filesproto.NewFilesService("files", client.DefaultClient)
 
 	if len(req.Get) == 0 || len(req.Get["project"].Values) == 0 {
@@ -42,7 +42,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	return nil
 }
 
-func (e *V1) ServeSeparate(ctx context.Context, req *pb.Request, rsp *pb.Response) error {
+func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error {
 	files := filesproto.NewFilesService("files", client.DefaultClient)
 	logger.Infof("Serving %v", req.Path)
 
