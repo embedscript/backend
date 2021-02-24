@@ -91,20 +91,20 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	<script id="template" type="x-tmpl-mustache">` +
 		htmlFile + `
 	</script>
-	<script>` +
-		jsFile +
-		`</script>
 	<script>
-		function render() {
-			var template = document.getElementById('template').innerHTML;
-			if (!view) {
-				template.innerHTML = "Variable 'view' not found";
-				return
-			}
-			var rendered = Mustache.render(template, view);
-			document.getElementById('` + id.String() + `').innerHTML = rendered;
+	function render() {
+		var template = document.getElementById('template').innerHTML;
+		if (!view) {
+			template.innerHTML = "Variable 'view' not found";
+			return
 		}
-	</script>` +
+		var rendered = Mustache.render(template, view);
+		document.getElementById('` + id.String() + `').innerHTML = rendered;
+	}
+
+	document.addEventListener("DOMContentLoaded", function (event) {` +
+		jsFile +
+		`})</script>` +
 		`</body>
 </html>`
 
