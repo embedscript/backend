@@ -92,7 +92,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		htmlFile + `
 	</script>
 	<script>
-	function render() {
+	function render(view) {
 		var template = document.getElementById('template').innerHTML;
 		if (!view) {
 			template.innerHTML = "Variable 'view' not found";
