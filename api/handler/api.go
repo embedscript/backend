@@ -5,6 +5,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/gofrs/uuid"
 	pb "github.com/micro/micro/v3/proto/api"
 	"github.com/micro/micro/v3/service/client"
 	"github.com/micro/micro/v3/service/logger"
@@ -74,14 +75,38 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 			cssFile = file.FileContents
 		}
 	}
+	id, _ := uuid.NewV4()
 
-	rendered := `<html><head><script src="https://embedscript.com/assets/micro.js"></script></head><body><div><style>` +
+	rendered := `<html>
+	<head>
+		<style>` +
 		cssFile +
-		`</style>` +
-		htmlFile +
-		`</div><script>` +
+		`</style>
+	</head>
+	<body>
+	<div id="` + id.String() + `">
+	</div>
+	<script src="https://embedscript.com/assets/micro.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/4.1.0/mustache.min.js"></script>
+	<script id="template" type="x-tmpl-mustache">` +
+		htmlFile + `
+	</script>
+	<script>` +
 		jsFile +
-		`</script></body></html>`
+		`</script>
+	<script>
+		function render() {
+			var template = document.getElementById('template').innerHTML;
+			if (!view) {
+				template.innerHTML = "Variable 'view' not found";
+				return
+			}
+			var rendered = Mustache.render(template, view);
+			document.getElementById('` + id.String() + `').innerHTML = rendered;
+		}
+	</script>` +
+		`</body>
+</html>`
 
 	rsp.Header = make(map[string]*pb.Pair)
 	rsp.Header["Content-Type"] = &pb.Pair{
