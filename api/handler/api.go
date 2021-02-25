@@ -87,11 +87,14 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	<div id="` + id.String() + `">
 	</div>
 	<script src="https://embedscript.com/assets/micro.js"></script>
+	<script src="https://kof.github.io/diff-renderer/dist/diff-renderer.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 	<script id="template" type="x-tmpl-mustache">` +
 		htmlFile + `
 	</script>
 	<script>
+	var renderer = new DiffRenderer(document.getElementById('` + id.String() + `'))
+
 	function render(view) {
 		if (!view) {
 			template.innerHTML = "Variable 'view' not found";
@@ -100,7 +103,9 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		var source = document.getElementById('template').innerHTML;
 		var template = Handlebars.compile(source);
 		var rendered = template(view);
-		document.getElementById('` + id.String() + `').innerHTML = rendered;
+		
+		renderer.update(rendered)
+		DiffRenderer.render()
 	}
 
 	document.addEventListener("DOMContentLoaded", function (event) {` +
