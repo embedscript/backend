@@ -87,18 +87,19 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	<div id="` + id.String() + `">
 	</div>
 	<script src="https://embedscript.com/assets/micro.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/4.1.0/mustache.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 	<script id="template" type="x-tmpl-mustache">` +
 		htmlFile + `
 	</script>
 	<script>
 	function render(view) {
-		var template = document.getElementById('template').innerHTML;
 		if (!view) {
 			template.innerHTML = "Variable 'view' not found";
 			return
 		}
-		var rendered = Mustache.render(template, view);
+		var source = document.getElementById('template').innerHTML;
+		var template = Handlebars.compile(source);
+		var rendered = template(view);
 		document.getElementById('` + id.String() + `').innerHTML = rendered;
 	}
 
