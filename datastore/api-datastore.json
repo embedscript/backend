@@ -1,0 +1,791 @@
+{
+  "components": {
+    "requestBodies": {
+      "DatastoreCreateIndexRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CreateIndexRequest"
+            }
+          }
+        },
+        "description": "DatastoreCreateIndexRequest"
+      },
+      "DatastoreCreateRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CreateRequest"
+            }
+          }
+        },
+        "description": "DatastoreCreateRequest"
+      },
+      "DatastoreDeleteRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DeleteRequest"
+            }
+          }
+        },
+        "description": "DatastoreDeleteRequest"
+      },
+      "DatastoreReadRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ReadRequest"
+            }
+          }
+        },
+        "description": "DatastoreReadRequest"
+      },
+      "DatastoreUpdateRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UpdateRequest"
+            }
+          }
+        },
+        "description": "DatastoreUpdateRequest"
+      }
+    },
+    "responses": {
+      "DatastoreCreateIndexResponse": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CreateIndexResponse"
+            }
+          }
+        },
+        "description": "DatastoreCreateIndexResponse"
+      },
+      "DatastoreCreateResponse": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CreateResponse"
+            }
+          }
+        },
+        "description": "DatastoreCreateResponse"
+      },
+      "DatastoreDeleteResponse": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DeleteResponse"
+            }
+          }
+        },
+        "description": "DatastoreDeleteResponse"
+      },
+      "DatastoreReadResponse": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ReadResponse"
+            }
+          }
+        },
+        "description": "DatastoreReadResponse"
+      },
+      "DatastoreUpdateResponse": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UpdateResponse"
+            }
+          }
+        },
+        "description": "DatastoreUpdateResponse"
+      },
+      "MicroAPIError": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "Code": {
+                  "description": "Error code",
+                  "example": 500,
+                  "type": "number"
+                },
+                "Detail": {
+                  "description": "Error detail",
+                  "example": "service not found",
+                  "type": "string"
+                },
+                "Id": {
+                  "description": "Error ID",
+                  "type": "string"
+                },
+                "Status": {
+                  "description": "Error status message",
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "title": "MicroAPIError",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Error from the Micro API"
+      }
+    },
+    "schemas": {
+      "CreateIndexRequest": {
+        "properties": {
+          "index": {
+            "properties": {
+              "Base32Encode": {
+                "description": "True = base32 encode ordered strings for easier management\n or false = keep 4 bytes long runes that might dispaly weirdly",
+                "type": "boolean"
+              },
+              "Float32Max": {
+                "format": "double",
+                "type": "number"
+              },
+              "Float64Max": {
+                "format": "double",
+                "type": "number"
+              },
+              "FloatFormat": {
+                "type": "string"
+              },
+              "fieldName": {
+                "description": "Field to index on.\n eg. email",
+                "type": "string"
+              },
+              "order": {
+                "properties": {
+                  "fieldName": {
+                    "description": "Field to order on\n eg. age",
+                    "type": "string"
+                  },
+                  "orderType": {
+                    "description": "Type of the ordering\n eg. ascending, descending, unordered",
+                    "enum": [
+                      "UNORDERED",
+                      "ASCENDING",
+                      "DESCENDING"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "stringOrderPadLength": {
+                "description": "Strings for ordering will be padded to a fix length\n Not a useful property for Querying, please ignore this at query time.\n Number is in bytes, not string characters. Choose a sufficiently big one.\n Consider that each character might take 4 bytes given the\n internals of reverse ordering. So a good rule of thumbs is expected\n characters in a string X 4",
+                "format": "int64",
+                "type": "number"
+              },
+              "type": {
+                "description": "Type of index\n eg. eq",
+                "type": "string"
+              },
+              "unique": {
+                "description": "Do not allow duplicate values of this field in the index.\n Useful for emails, usernames, post slugs etc.",
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "title": "CreateIndexRequest",
+        "type": "object"
+      },
+      "CreateIndexResponse": {
+        "title": "CreateIndexResponse",
+        "type": "object"
+      },
+      "CreateRequest": {
+        "properties": {
+          "value": {
+            "description": "JSON marshalled record to save",
+            "type": "string"
+          }
+        },
+        "title": "CreateRequest",
+        "type": "object"
+      },
+      "CreateResponse": {
+        "title": "CreateResponse",
+        "type": "object"
+      },
+      "DeleteRequest": {
+        "properties": {
+          "query": {
+            "properties": {
+              "index": {
+                "properties": {
+                  "Base32Encode": {
+                    "description": "True = base32 encode ordered strings for easier management\n or false = keep 4 bytes long runes that might dispaly weirdly",
+                    "type": "boolean"
+                  },
+                  "Float32Max": {
+                    "format": "double",
+                    "type": "number"
+                  },
+                  "Float64Max": {
+                    "format": "double",
+                    "type": "number"
+                  },
+                  "FloatFormat": {
+                    "type": "string"
+                  },
+                  "fieldName": {
+                    "description": "Field to index on.\n eg. email",
+                    "type": "string"
+                  },
+                  "order": {
+                    "properties": {
+                      "fieldName": {
+                        "description": "Field to order on\n eg. age",
+                        "type": "string"
+                      },
+                      "orderType": {
+                        "description": "Type of the ordering\n eg. ascending, descending, unordered",
+                        "enum": [
+                          "UNORDERED",
+                          "ASCENDING",
+                          "DESCENDING"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "stringOrderPadLength": {
+                    "description": "Strings for ordering will be padded to a fix length\n Not a useful property for Querying, please ignore this at query time.\n Number is in bytes, not string characters. Choose a sufficiently big one.\n Consider that each character might take 4 bytes given the\n internals of reverse ordering. So a good rule of thumbs is expected\n characters in a string X 4",
+                    "format": "int64",
+                    "type": "number"
+                  },
+                  "type": {
+                    "description": "Type of index\n eg. eq",
+                    "type": "string"
+                  },
+                  "unique": {
+                    "description": "Do not allow duplicate values of this field in the index.\n Useful for emails, usernames, post slugs etc.",
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
+              },
+              "limit": {
+                "format": "int64",
+                "type": "number"
+              },
+              "offset": {
+                "format": "int64",
+                "type": "number"
+              },
+              "order": {
+                "properties": {
+                  "fieldName": {
+                    "description": "Field to order on\n eg. age",
+                    "type": "string"
+                  },
+                  "orderType": {
+                    "description": "Type of the ordering\n eg. ascending, descending, unordered",
+                    "enum": [
+                      "UNORDERED",
+                      "ASCENDING",
+                      "DESCENDING"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "title": "DeleteRequest",
+        "type": "object"
+      },
+      "DeleteResponse": {
+        "title": "DeleteResponse",
+        "type": "object"
+      },
+      "Index": {
+        "properties": {
+          "Base32Encode": {
+            "description": "True = base32 encode ordered strings for easier management\n or false = keep 4 bytes long runes that might dispaly weirdly",
+            "type": "boolean"
+          },
+          "Float32Max": {
+            "format": "double",
+            "type": "number"
+          },
+          "Float64Max": {
+            "format": "double",
+            "type": "number"
+          },
+          "FloatFormat": {
+            "type": "string"
+          },
+          "fieldName": {
+            "description": "Field to index on.\n eg. email",
+            "type": "string"
+          },
+          "order": {
+            "properties": {
+              "fieldName": {
+                "description": "Field to order on\n eg. age",
+                "type": "string"
+              },
+              "orderType": {
+                "description": "Type of the ordering\n eg. ascending, descending, unordered",
+                "enum": [
+                  "UNORDERED",
+                  "ASCENDING",
+                  "DESCENDING"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "stringOrderPadLength": {
+            "description": "Strings for ordering will be padded to a fix length\n Not a useful property for Querying, please ignore this at query time.\n Number is in bytes, not string characters. Choose a sufficiently big one.\n Consider that each character might take 4 bytes given the\n internals of reverse ordering. So a good rule of thumbs is expected\n characters in a string X 4",
+            "format": "int64",
+            "type": "number"
+          },
+          "type": {
+            "description": "Type of index\n eg. eq",
+            "type": "string"
+          },
+          "unique": {
+            "description": "Do not allow duplicate values of this field in the index.\n Useful for emails, usernames, post slugs etc.",
+            "type": "boolean"
+          }
+        },
+        "title": "Index",
+        "type": "object"
+      },
+      "Order": {
+        "description": "Order is the order of the index",
+        "properties": {
+          "fieldName": {
+            "description": "Field to order on\n eg. age",
+            "type": "string"
+          },
+          "orderType": {
+            "description": "Type of the ordering\n eg. ascending, descending, unordered",
+            "enum": [
+              "UNORDERED",
+              "ASCENDING",
+              "DESCENDING"
+            ],
+            "type": "string"
+          }
+        },
+        "title": "Order",
+        "type": "object"
+      },
+      "Query": {
+        "properties": {
+          "index": {
+            "properties": {
+              "Base32Encode": {
+                "description": "True = base32 encode ordered strings for easier management\n or false = keep 4 bytes long runes that might dispaly weirdly",
+                "type": "boolean"
+              },
+              "Float32Max": {
+                "format": "double",
+                "type": "number"
+              },
+              "Float64Max": {
+                "format": "double",
+                "type": "number"
+              },
+              "FloatFormat": {
+                "type": "string"
+              },
+              "fieldName": {
+                "description": "Field to index on.\n eg. email",
+                "type": "string"
+              },
+              "order": {
+                "properties": {
+                  "fieldName": {
+                    "description": "Field to order on\n eg. age",
+                    "type": "string"
+                  },
+                  "orderType": {
+                    "description": "Type of the ordering\n eg. ascending, descending, unordered",
+                    "enum": [
+                      "UNORDERED",
+                      "ASCENDING",
+                      "DESCENDING"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "stringOrderPadLength": {
+                "description": "Strings for ordering will be padded to a fix length\n Not a useful property for Querying, please ignore this at query time.\n Number is in bytes, not string characters. Choose a sufficiently big one.\n Consider that each character might take 4 bytes given the\n internals of reverse ordering. So a good rule of thumbs is expected\n characters in a string X 4",
+                "format": "int64",
+                "type": "number"
+              },
+              "type": {
+                "description": "Type of index\n eg. eq",
+                "type": "string"
+              },
+              "unique": {
+                "description": "Do not allow duplicate values of this field in the index.\n Useful for emails, usernames, post slugs etc.",
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          },
+          "limit": {
+            "format": "int64",
+            "type": "number"
+          },
+          "offset": {
+            "format": "int64",
+            "type": "number"
+          },
+          "order": {
+            "properties": {
+              "fieldName": {
+                "description": "Field to order on\n eg. age",
+                "type": "string"
+              },
+              "orderType": {
+                "description": "Type of the ordering\n eg. ascending, descending, unordered",
+                "enum": [
+                  "UNORDERED",
+                  "ASCENDING",
+                  "DESCENDING"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "title": "Query",
+        "type": "object"
+      },
+      "ReadRequest": {
+        "properties": {
+          "query": {
+            "properties": {
+              "index": {
+                "properties": {
+                  "Base32Encode": {
+                    "description": "True = base32 encode ordered strings for easier management\n or false = keep 4 bytes long runes that might dispaly weirdly",
+                    "type": "boolean"
+                  },
+                  "Float32Max": {
+                    "format": "double",
+                    "type": "number"
+                  },
+                  "Float64Max": {
+                    "format": "double",
+                    "type": "number"
+                  },
+                  "FloatFormat": {
+                    "type": "string"
+                  },
+                  "fieldName": {
+                    "description": "Field to index on.\n eg. email",
+                    "type": "string"
+                  },
+                  "order": {
+                    "properties": {
+                      "fieldName": {
+                        "description": "Field to order on\n eg. age",
+                        "type": "string"
+                      },
+                      "orderType": {
+                        "description": "Type of the ordering\n eg. ascending, descending, unordered",
+                        "enum": [
+                          "UNORDERED",
+                          "ASCENDING",
+                          "DESCENDING"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "stringOrderPadLength": {
+                    "description": "Strings for ordering will be padded to a fix length\n Not a useful property for Querying, please ignore this at query time.\n Number is in bytes, not string characters. Choose a sufficiently big one.\n Consider that each character might take 4 bytes given the\n internals of reverse ordering. So a good rule of thumbs is expected\n characters in a string X 4",
+                    "format": "int64",
+                    "type": "number"
+                  },
+                  "type": {
+                    "description": "Type of index\n eg. eq",
+                    "type": "string"
+                  },
+                  "unique": {
+                    "description": "Do not allow duplicate values of this field in the index.\n Useful for emails, usernames, post slugs etc.",
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
+              },
+              "limit": {
+                "format": "int64",
+                "type": "number"
+              },
+              "offset": {
+                "format": "int64",
+                "type": "number"
+              },
+              "order": {
+                "properties": {
+                  "fieldName": {
+                    "description": "Field to order on\n eg. age",
+                    "type": "string"
+                  },
+                  "orderType": {
+                    "description": "Type of the ordering\n eg. ascending, descending, unordered",
+                    "enum": [
+                      "UNORDERED",
+                      "ASCENDING",
+                      "DESCENDING"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "title": "ReadRequest",
+        "type": "object"
+      },
+      "ReadResponse": {
+        "properties": {
+          "value": {
+            "description": "JSON marshalled record found",
+            "type": "string"
+          }
+        },
+        "title": "ReadResponse",
+        "type": "object"
+      },
+      "UpdateRequest": {
+        "properties": {
+          "value": {
+            "description": "JSON marshalled record to save",
+            "type": "string"
+          }
+        },
+        "title": "UpdateRequest",
+        "type": "object"
+      },
+      "UpdateResponse": {
+        "title": "UpdateResponse",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "MicroAPIToken": {
+        "bearerFormat": "JWT",
+        "description": "Micro API token",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "description": "Generated by protoc-gen-openapi",
+    "title": "Datastore",
+    "version": "1",
+    "x-logo": {
+      "altText": "Micro logo",
+      "backgroundColor": "#FFFFFF",
+      "url": "https://micro.mu/images/brand.png"
+    }
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/datastore/Datastore/Create": {
+      "parameters": [
+        {
+          "in": "header",
+          "name": "Micro-Namespace",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DatastoreCreateRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DatastoreCreateResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/MicroAPIError"
+          }
+        },
+        "security": [
+          {
+            "MicroAPIToken": []
+          }
+        ],
+        "summary": "Datastore.Create(CreateRequest)"
+      }
+    },
+    "/datastore/Datastore/CreateIndex": {
+      "parameters": [
+        {
+          "in": "header",
+          "name": "Micro-Namespace",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DatastoreCreateIndexRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DatastoreCreateIndexResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/MicroAPIError"
+          }
+        },
+        "security": [
+          {
+            "MicroAPIToken": []
+          }
+        ],
+        "summary": "Datastore.CreateIndex(CreateIndexRequest)"
+      }
+    },
+    "/datastore/Datastore/Delete": {
+      "parameters": [
+        {
+          "in": "header",
+          "name": "Micro-Namespace",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DatastoreDeleteRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DatastoreDeleteResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/MicroAPIError"
+          }
+        },
+        "security": [
+          {
+            "MicroAPIToken": []
+          }
+        ],
+        "summary": "Datastore.Delete(DeleteRequest)"
+      }
+    },
+    "/datastore/Datastore/Read": {
+      "parameters": [
+        {
+          "in": "header",
+          "name": "Micro-Namespace",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DatastoreReadRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DatastoreReadResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/MicroAPIError"
+          }
+        },
+        "security": [
+          {
+            "MicroAPIToken": []
+          }
+        ],
+        "summary": "Datastore.Read(ReadRequest)"
+      }
+    },
+    "/datastore/Datastore/Update": {
+      "parameters": [
+        {
+          "in": "header",
+          "name": "Micro-Namespace",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DatastoreUpdateRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DatastoreUpdateResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/MicroAPIError"
+          }
+        },
+        "security": [
+          {
+            "MicroAPIToken": []
+          }
+        ],
+        "summary": "Datastore.Update(UpdateRequest)"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.m3o.dev",
+      "description": "Micro DEV environment"
+    },
+    {
+      "url": "https://api.m3o.com",
+      "description": "Micro LIVE environment"
+    }
+  ]
+}
