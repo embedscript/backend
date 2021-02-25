@@ -8,7 +8,7 @@ import (
 	log "github.com/micro/micro/v3/service/logger"
 	"github.com/micro/micro/v3/service/model"
 
-	datastore "github.com/micro/services/datastore/proto"
+	datastore "github.com/embedscript/backend/datastore/proto"
 )
 
 var indexIndex = model.Index{
