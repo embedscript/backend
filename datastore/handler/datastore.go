@@ -55,7 +55,7 @@ func (e *Datastore) Create(ctx context.Context, req *datastore.CreateRequest, rs
 		Indexes:   indexes,
 		Namespace: req.Project + req.Table,
 	})
-	return db.Context(ctx).Create(m)
+	return db.Create(m)
 }
 
 func (e *Datastore) authAction(ctx context.Context, project, table, action string) error {
@@ -107,7 +107,7 @@ func (e *Datastore) Update(ctx context.Context, req *datastore.UpdateRequest, rs
 	db := model.New(map[string]interface{}{}, &model.Options{
 		Indexes: indexes,
 	})
-	return db.Context(ctx).Update(m)
+	return db.Update(m)
 }
 
 func (e *Datastore) getIndexes(ctx context.Context, project, table string) ([]model.Index, error) {
@@ -115,7 +115,7 @@ func (e *Datastore) getIndexes(ctx context.Context, project, table string) ([]mo
 		Namespace: project + table + "indexes",
 	})
 	result := []IndexRecord{}
-	err := indexDb.Context(ctx).Read(model.QueryAll(), &result)
+	err := indexDb.Read(model.QueryAll(), &result)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +131,7 @@ func (e *Datastore) getRules(ctx context.Context, project, table string) ([]Rule
 		Namespace: project + table + "rules",
 	})
 	result := []Rule{}
-	err := indexDb.Context(ctx).Read(model.QueryAll(), &result)
+	err := indexDb.Read(model.QueryAll(), &result)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +143,7 @@ func (e *Datastore) getOwner(ctx context.Context, project, table string) ([]Owne
 		Namespace: project + table + "owners",
 	})
 	result := []Owner{}
-	err := indexDb.Context(ctx).Read(model.QueryAll(), &result)
+	err := indexDb.Read(model.QueryAll(), &result)
 	if err != nil {
 		return nil, err
 	}
@@ -180,7 +180,7 @@ func (e *Datastore) Read(ctx context.Context, req *datastore.ReadRequest, rsp *d
 	db := model.New(map[string]interface{}{}, &model.Options{
 		Indexes: indexes,
 	})
-	err = db.Context(ctx).Read(q, &result)
+	err = db.Read(q, &result)
 	if err != nil {
 		return err
 	}
@@ -199,7 +199,7 @@ func (e *Datastore) CreateIndex(ctx context.Context, req *datastore.CreateIndexR
 	db := model.New(IndexRecord{}, &model.Options{
 		Namespace: req.Project + req.Table + "indexes",
 	})
-	return db.Context(ctx).Create(indexRecord)
+	return db.Create(indexRecord)
 }
 
 func (e *Datastore) CreateRule(ctx context.Context, req *datastore.CreateRuleRequest, rsp *datastore.CreateRuleResponse) error {
@@ -225,7 +225,7 @@ func (e *Datastore) CreateRule(ctx context.Context, req *datastore.CreateRuleReq
 func (e *Datastore) Delete(ctx context.Context, req *datastore.DeleteRequest, rsp *datastore.DeleteResponse) error {
 	log.Info("Received Datastore.Delete request")
 	q := toQuery(req.Query)
-	return model.New(map[string]interface{}{}, nil).Context(ctx).Delete(q)
+	return model.New(map[string]interface{}{}, nil).Delete(q)
 }
 
 func toQuery(pquery *datastore.Query) model.Query {
