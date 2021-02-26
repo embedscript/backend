@@ -52,8 +52,8 @@ func (e *Datastore) Create(ctx context.Context, req *datastore.CreateRequest, rs
 		return err
 	}
 	db := model.New(map[string]interface{}{}, &model.Options{
-		Indexes: indexes,
-		Key:     req.Project + req.Table,
+		Indexes:   indexes,
+		Namespace: req.Project + req.Table,
 	})
 	return db.Context(ctx).Create(m)
 }
@@ -112,7 +112,7 @@ func (e *Datastore) Update(ctx context.Context, req *datastore.UpdateRequest, rs
 
 func (e *Datastore) getIndexes(ctx context.Context, project, table string) ([]model.Index, error) {
 	indexDb := model.New(map[string]interface{}{}, &model.Options{
-		Key: project + table + "indexes",
+		Namespace: project + table + "indexes",
 	})
 	result := []IndexRecord{}
 	err := indexDb.Context(ctx).Read(model.QueryAll(), &result)
@@ -128,7 +128,7 @@ func (e *Datastore) getIndexes(ctx context.Context, project, table string) ([]mo
 
 func (e *Datastore) getRules(ctx context.Context, project, table string) ([]Rule, error) {
 	indexDb := model.New(map[string]interface{}{}, &model.Options{
-		Key: project + table + "rules",
+		Namespace: project + table + "rules",
 	})
 	result := []Rule{}
 	err := indexDb.Context(ctx).Read(model.QueryAll(), &result)
@@ -140,7 +140,7 @@ func (e *Datastore) getRules(ctx context.Context, project, table string) ([]Rule
 
 func (e *Datastore) getOwner(ctx context.Context, project, table string) ([]Owner, error) {
 	indexDb := model.New(map[string]interface{}{}, &model.Options{
-		Key: project + table + "owners",
+		Namespace: project + table + "owners",
 	})
 	result := []Owner{}
 	err := indexDb.Context(ctx).Read(model.QueryAll(), &result)
@@ -152,7 +152,7 @@ func (e *Datastore) getOwner(ctx context.Context, project, table string) ([]Owne
 
 func (e *Datastore) saveOwner(ctx context.Context, project, table, ownerID string) error {
 	ownerDb := model.New(map[string]interface{}{}, &model.Options{
-		Key: project + table + "owners",
+		Namespace: project + table + "owners",
 	})
 	ownerDb.Create(Owner{
 		ID: ownerID,
@@ -162,7 +162,7 @@ func (e *Datastore) saveOwner(ctx context.Context, project, table, ownerID strin
 
 func (e *Datastore) saveRule(ctx context.Context, rule *datastore.Rule) error {
 	ownerDb := model.New(map[string]interface{}{}, &model.Options{
-		Key: rule.Project + rule.Table + "rules",
+		Namespace: rule.Project + rule.Table + "rules",
 	})
 	return ownerDb.Create(Rule{
 		ID: rule.Role + rule.Action,
@@ -197,7 +197,7 @@ func (e *Datastore) CreateIndex(ctx context.Context, req *datastore.CreateIndexR
 		ID: index.FieldName + index.Type + index.Order.FieldName + string(index.Order.Type),
 	}
 	db := model.New(IndexRecord{}, &model.Options{
-		Key: req.Project + req.Table + "indexes",
+		Namespace: req.Project + req.Table + "indexes",
 	})
 	return db.Context(ctx).Create(indexRecord)
 }
