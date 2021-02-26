@@ -229,7 +229,7 @@ func (e *Datastore) Delete(ctx context.Context, req *datastore.DeleteRequest, rs
 }
 
 func toQuery(pquery *datastore.Query) model.Query {
-	q := model.QueryEquals(pquery.Index.FieldName, pquery.Value)
+	q := model.QueryEquals(pquery.FieldName, pquery.Value)
 	if pquery.Order != nil {
 		q.Order.FieldName = pquery.Order.FieldName
 		q.Order.Type = model.OrderType(pquery.Order.OrderType.String())
