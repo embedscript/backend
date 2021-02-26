@@ -95,8 +95,12 @@ func (e *Datastore) authAction(ctx context.Context, project, table, action strin
 
 func (e *Datastore) Update(ctx context.Context, req *datastore.UpdateRequest, rsp *datastore.UpdateResponse) error {
 	log.Info("Received Datastore.Update request")
+	err := e.authAction(ctx, req.Project, req.Table, "write")
+	if err != nil {
+		return err
+	}
 	m := map[string]interface{}{}
-	err := json.Unmarshal([]byte(req.Value), &m)
+	err = json.Unmarshal([]byte(req.Value), &m)
 	if err != nil {
 		return err
 	}
@@ -172,6 +176,11 @@ func (e *Datastore) saveRule(ctx context.Context, rule *datastore.Rule) error {
 
 func (e *Datastore) Read(ctx context.Context, req *datastore.ReadRequest, rsp *datastore.ReadResponse) error {
 	log.Info("Received Datastore.Read request")
+	err := e.authAction(ctx, req.Project, req.Table, "read")
+	if err != nil {
+		return err
+	}
+
 	q := toQuery(req.Query)
 	result := []map[string]interface{}{}
 	indexes, err := e.getIndexes(ctx, req.Project, req.Table)
@@ -226,6 +235,11 @@ func (e *Datastore) CreateRule(ctx context.Context, req *datastore.CreateRuleReq
 
 func (e *Datastore) Delete(ctx context.Context, req *datastore.DeleteRequest, rsp *datastore.DeleteResponse) error {
 	log.Info("Received Datastore.Delete request")
+	err := e.authAction(ctx, req.Project, req.Table, "delete")
+	if err != nil {
+		return err
+	}
+
 	q := toQuery(req.Query)
 	return model.New(map[string]interface{}{}, &model.Options{
 		Namespace: req.Project + req.Table,
