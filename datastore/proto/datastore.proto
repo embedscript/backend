@@ -12,14 +12,21 @@ service Datastore {
 	rpc Read(ReadRequest) returns (ReadResponse) {}
 	rpc Delete(DeleteRequest) returns (DeleteResponse) {}
 	rpc CreateIndex(CreateIndexRequest) returns (CreateIndexResponse) {}
+	rpc CreateRule(CreateRuleRequest) returns (CreateRuleResponse) {}
 }
 
 message Query {
-	Index index = 1;
-	Order  order = 2;
-	string value = 3;
-	int64 offset = 4;
-	int64 limit = 5;
+	// Field to query by
+	// eg. email
+	string fieldName = 1;
+	// Type of query
+	// eg. eq
+	string type = 2;
+	Index index = 3;
+	Order  order = 4;
+	string value = 5;
+	int64 offset = 6;
+	int64 limit = 7;
 }
 
 // Order is the order of the index
@@ -71,16 +78,20 @@ message Index {
 
 
 message CreateRequest {
+	string project = 1;
+	string table = 2;
 	// JSON marshalled record to save
-	string value = 1;
+	string value = 3;
 }
 
 message CreateResponse {
 }
 
 message UpdateRequest {
+	string project = 1;
+	string table = 2;
 	// JSON marshalled record to save
-	string value = 1;
+	string value = 3;
 }
 
 message UpdateResponse {
@@ -88,7 +99,9 @@ message UpdateResponse {
 }
 
 message ReadRequest {
-	Query query = 1;
+	string project = 1;
+	string table = 2;
+	Query query = 3;
 }
 
 message ReadResponse {
@@ -97,16 +110,37 @@ message ReadResponse {
 }
 
 message DeleteRequest {
-	Query query = 1;
+	string project = 1;
+	string table = 2;
+	Query query = 3;
 }
 
 message DeleteResponse {
 }
 
 message CreateIndexRequest {
-	Index index = 1;
+	string project = 1;
+	string table = 2;
+	Index index = 3	;
 }
 
 message CreateIndexResponse {
+
+}
+
+message Rule {
+	string project = 1;
+	string table = 2;
+	// roles: admin, user, unregistered
+	string role = 3;
+	// write, read
+	string action = 4;
+}
+
+message CreateRuleRequest {
+	Rule rule = 1;
+}
+
+message CreateRuleResponse {
 
 }

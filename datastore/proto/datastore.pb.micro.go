@@ -47,6 +47,7 @@ type DatastoreService interface {
 	Read(ctx context.Context, in *ReadRequest, opts ...client.CallOption) (*ReadResponse, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error)
 	CreateIndex(ctx context.Context, in *CreateIndexRequest, opts ...client.CallOption) (*CreateIndexResponse, error)
+	CreateRule(ctx context.Context, in *CreateRuleRequest, opts ...client.CallOption) (*CreateRuleResponse, error)
 }
 
 type datastoreService struct {
@@ -111,6 +112,16 @@ func (c *datastoreService) CreateIndex(ctx context.Context, in *CreateIndexReque
 	return out, nil
 }
 
+func (c *datastoreService) CreateRule(ctx context.Context, in *CreateRuleRequest, opts ...client.CallOption) (*CreateRuleResponse, error) {
+	req := c.c.NewRequest(c.name, "Datastore.CreateRule", in)
+	out := new(CreateRuleResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Datastore service
 
 type DatastoreHandler interface {
@@ -119,6 +130,7 @@ type DatastoreHandler interface {
 	Read(context.Context, *ReadRequest, *ReadResponse) error
 	Delete(context.Context, *DeleteRequest, *DeleteResponse) error
 	CreateIndex(context.Context, *CreateIndexRequest, *CreateIndexResponse) error
+	CreateRule(context.Context, *CreateRuleRequest, *CreateRuleResponse) error
 }
 
 func RegisterDatastoreHandler(s server.Server, hdlr DatastoreHandler, opts ...server.HandlerOption) error {
@@ -128,6 +140,7 @@ func RegisterDatastoreHandler(s server.Server, hdlr DatastoreHandler, opts ...se
 		Read(ctx context.Context, in *ReadRequest, out *ReadResponse) error
 		Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error
 		CreateIndex(ctx context.Context, in *CreateIndexRequest, out *CreateIndexResponse) error
+		CreateRule(ctx context.Context, in *CreateRuleRequest, out *CreateRuleResponse) error
 	}
 	type Datastore struct {
 		datastore
@@ -158,4 +171,8 @@ func (h *datastoreHandler) Delete(ctx context.Context, in *DeleteRequest, out *D
 
 func (h *datastoreHandler) CreateIndex(ctx context.Context, in *CreateIndexRequest, out *CreateIndexResponse) error {
 	return h.DatastoreHandler.CreateIndex(ctx, in, out)
+}
+
+func (h *datastoreHandler) CreateRule(ctx context.Context, in *CreateRuleRequest, out *CreateRuleResponse) error {
+	return h.DatastoreHandler.CreateRule(ctx, in, out)
 }

@@ -21,6 +21,16 @@
         },
         "description": "DatastoreCreateRequest"
       },
+      "DatastoreCreateRuleRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CreateRuleRequest"
+            }
+          }
+        },
+        "description": "DatastoreCreateRuleRequest"
+      },
       "DatastoreDeleteRequest": {
         "content": {
           "application/json": {
@@ -72,6 +82,16 @@
           }
         },
         "description": "DatastoreCreateResponse"
+      },
+      "DatastoreCreateRuleResponse": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CreateRuleResponse"
+            }
+          }
+        },
+        "description": "DatastoreCreateRuleResponse"
       },
       "DatastoreDeleteResponse": {
         "content": {
@@ -193,6 +213,12 @@
               }
             },
             "type": "object"
+          },
+          "project": {
+            "type": "string"
+          },
+          "table": {
+            "type": "string"
           }
         },
         "title": "CreateIndexRequest",
@@ -204,6 +230,12 @@
       },
       "CreateRequest": {
         "properties": {
+          "project": {
+            "type": "string"
+          },
+          "table": {
+            "type": "string"
+          },
           "value": {
             "description": "JSON marshalled record to save",
             "type": "string"
@@ -216,10 +248,46 @@
         "title": "CreateResponse",
         "type": "object"
       },
+      "CreateRuleRequest": {
+        "properties": {
+          "rule": {
+            "properties": {
+              "action": {
+                "description": "write, read",
+                "type": "string"
+              },
+              "project": {
+                "type": "string"
+              },
+              "role": {
+                "description": "roles: admin, user, unregistered",
+                "type": "string"
+              },
+              "table": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "title": "CreateRuleRequest",
+        "type": "object"
+      },
+      "CreateRuleResponse": {
+        "title": "CreateRuleResponse",
+        "type": "object"
+      },
       "DeleteRequest": {
         "properties": {
+          "project": {
+            "type": "string"
+          },
           "query": {
             "properties": {
+              "fieldName": {
+                "description": "Field to query by\n eg. email",
+                "type": "string"
+              },
               "index": {
                 "properties": {
                   "Base32Encode": {
@@ -301,11 +369,18 @@
                 },
                 "type": "object"
               },
+              "type": {
+                "description": "Type of query\n eg. eq",
+                "type": "string"
+              },
               "value": {
                 "type": "string"
               }
             },
             "type": "object"
+          },
+          "table": {
+            "type": "string"
           }
         },
         "title": "DeleteRequest",
@@ -393,6 +468,10 @@
       },
       "Query": {
         "properties": {
+          "fieldName": {
+            "description": "Field to query by\n eg. email",
+            "type": "string"
+          },
           "index": {
             "properties": {
               "Base32Encode": {
@@ -474,6 +553,10 @@
             },
             "type": "object"
           },
+          "type": {
+            "description": "Type of query\n eg. eq",
+            "type": "string"
+          },
           "value": {
             "type": "string"
           }
@@ -483,8 +566,15 @@
       },
       "ReadRequest": {
         "properties": {
+          "project": {
+            "type": "string"
+          },
           "query": {
             "properties": {
+              "fieldName": {
+                "description": "Field to query by\n eg. email",
+                "type": "string"
+              },
               "index": {
                 "properties": {
                   "Base32Encode": {
@@ -566,11 +656,18 @@
                 },
                 "type": "object"
               },
+              "type": {
+                "description": "Type of query\n eg. eq",
+                "type": "string"
+              },
               "value": {
                 "type": "string"
               }
             },
             "type": "object"
+          },
+          "table": {
+            "type": "string"
           }
         },
         "title": "ReadRequest",
@@ -586,8 +683,34 @@
         "title": "ReadResponse",
         "type": "object"
       },
+      "Rule": {
+        "properties": {
+          "action": {
+            "description": "write, read",
+            "type": "string"
+          },
+          "project": {
+            "type": "string"
+          },
+          "role": {
+            "description": "roles: admin, user, unregistered",
+            "type": "string"
+          },
+          "table": {
+            "type": "string"
+          }
+        },
+        "title": "Rule",
+        "type": "object"
+      },
       "UpdateRequest": {
         "properties": {
+          "project": {
+            "type": "string"
+          },
+          "table": {
+            "type": "string"
+          },
           "value": {
             "description": "JSON marshalled record to save",
             "type": "string"
@@ -682,6 +805,37 @@
           }
         ],
         "summary": "Datastore.CreateIndex(CreateIndexRequest)"
+      }
+    },
+    "/datastore/Datastore/CreateRule": {
+      "parameters": [
+        {
+          "in": "header",
+          "name": "Micro-Namespace",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DatastoreCreateRuleRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DatastoreCreateRuleResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/MicroAPIError"
+          }
+        },
+        "security": [
+          {
+            "MicroAPIToken": []
+          }
+        ],
+        "summary": "Datastore.CreateRule(CreateRuleRequest)"
       }
     },
     "/datastore/Datastore/Delete": {
