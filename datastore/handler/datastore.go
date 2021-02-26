@@ -105,7 +105,8 @@ func (e *Datastore) Update(ctx context.Context, req *datastore.UpdateRequest, rs
 		return err
 	}
 	db := model.New(map[string]interface{}{}, &model.Options{
-		Indexes: indexes,
+		Indexes:   indexes,
+		Namespace: req.Project + req.Table,
 	})
 	return db.Update(m)
 }
@@ -178,7 +179,8 @@ func (e *Datastore) Read(ctx context.Context, req *datastore.ReadRequest, rsp *d
 		return err
 	}
 	db := model.New(map[string]interface{}{}, &model.Options{
-		Indexes: indexes,
+		Indexes:   indexes,
+		Namespace: req.Project + req.Table,
 	})
 	err = db.Read(q, &result)
 	if err != nil {
@@ -225,7 +227,9 @@ func (e *Datastore) CreateRule(ctx context.Context, req *datastore.CreateRuleReq
 func (e *Datastore) Delete(ctx context.Context, req *datastore.DeleteRequest, rsp *datastore.DeleteResponse) error {
 	log.Info("Received Datastore.Delete request")
 	q := toQuery(req.Query)
-	return model.New(map[string]interface{}{}, nil).Delete(q)
+	return model.New(map[string]interface{}{}, &model.Options{
+		Namespace: req.Project + req.Table,
+	}).Delete(q)
 }
 
 func toQuery(pquery *datastore.Query) model.Query {
