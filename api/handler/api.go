@@ -114,6 +114,19 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		renderer.update(rendered)
 		DiffRenderer.render()
 	}
+	var Embed = {
+		render: render,
+		call: function(endpoint, request, callback) {
+			Micro.post(
+				endpoint,
+				"backend",
+				request
+				function (data) {
+					callback(data)
+				}
+			)
+		}
+	}
 
 	document.addEventListener("DOMContentLoaded", function (event) {` +
 		jsFile +
