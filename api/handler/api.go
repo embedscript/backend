@@ -125,7 +125,8 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 					callback(data)
 				}
 			)
-		}
+		},
+		requireLogin: Micro.requireLogin
 	}
 
 	document.addEventListener("DOMContentLoaded", function (event) {` +
