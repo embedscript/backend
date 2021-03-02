@@ -142,6 +142,7 @@ func (e *Datastore) getRules(ctx context.Context, project, table string) ([]Rule
 	if err != nil {
 		return nil, err
 	}
+	log.Infof("Found %v rules for project %v and table %v", len(result), project, table)
 	return result, nil
 }
 
