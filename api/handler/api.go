@@ -50,10 +50,14 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		return errors.New("bad request")
 	}
 	project := req.Get["project"].Values[0]
-	logger.Infof("Serving %v", project)
+	if len(req.Get) == 0 || len(req.Get["script"].Values) == 0 {
+		return errors.New("bad request")
+	}
+	script := req.Get["script"].Values[0]
+	logger.Infof("Serving %v", script)
 
 	resp, err := files.List(ctx, &filesproto.ListRequest{
-		Project: project,
+		Project: script,
 	})
 	if err != nil {
 		return err
@@ -126,7 +130,8 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 				}
 			)
 		},
-		requireLogin: Micro.requireLogin
+		requireLogin: Micro.requireLogin,
+		ID: "` + project + `",
 	}
 
 	document.addEventListener("DOMContentLoaded", function (event) {` +
