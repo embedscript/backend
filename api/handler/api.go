@@ -131,7 +131,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 			)
 		},
 		requireLogin: Micro.requireLogin,
-		ID: "` + project + `",
+		project: "` + project + `",
 	}
 
 	document.addEventListener("DOMContentLoaded", function (event) {` +
