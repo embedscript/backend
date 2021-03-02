@@ -13,6 +13,8 @@ import (
 	datastore "github.com/embedscript/backend/datastore/proto"
 )
 
+var errNoOwners = errors.New("unauthorized: no owners")
+
 var indexIndex = model.Index{
 	FieldName: "TypeOf",
 }
@@ -84,7 +86,7 @@ func (e *Datastore) authAction(ctx context.Context, project, table, action strin
 			return err
 		}
 		if len(owners) == 0 {
-			return errors.New("unauthorized: no owners")
+			return errNoOwners
 		}
 		if owner[0].ID != acc.ID {
 			return errors.New("unauthorized: not an owner")
@@ -145,7 +147,7 @@ func (e *Datastore) getRules(ctx context.Context, project, table string) ([]Rule
 
 func (e *Datastore) getOwner(ctx context.Context, project, table string) ([]Owner, error) {
 	indexDb := model.New(map[string]interface{}{}, &model.Options{
-		Namespace: project + table + "owners",
+		Namespace: project + "owners",
 	})
 	result := []Owner{}
 	err := indexDb.Read(model.QueryAll(), &result)
@@ -157,7 +159,7 @@ func (e *Datastore) getOwner(ctx context.Context, project, table string) ([]Owne
 
 func (e *Datastore) saveOwner(ctx context.Context, project, table, ownerID string) error {
 	ownerDb := model.New(map[string]interface{}{}, &model.Options{
-		Namespace: project + table + "owners",
+		Namespace: project + "owners",
 	})
 	ownerDb.Create(Owner{
 		ID: ownerID,
