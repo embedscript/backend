@@ -25,6 +25,7 @@ import (
 	"github.com/micro/micro/v3/service/auth"
 	"github.com/micro/micro/v3/service/client"
 	mconfig "github.com/micro/micro/v3/service/config"
+	cont "github.com/micro/micro/v3/service/context"
 	merrors "github.com/micro/micro/v3/service/errors"
 	logger "github.com/micro/micro/v3/service/logger"
 	model "github.com/micro/micro/v3/service/model"
@@ -100,7 +101,7 @@ func NewSignup(srv *service.Service, auth auth.Auth) *Signup {
 		c.PaymentMessage = Message
 	}
 	if !c.TestMode && len(c.Sendgrid.TemplateID) == 0 {
-		logger.Fatalf("No sendgrid template ID provided")
+		logger.Warnf("No sendgrid template ID provided")
 	}
 
 	s := &Signup{
@@ -382,17 +383,31 @@ func (e *Signup) Recover(ctx context.Context, req *signup.RecoverRequest, rsp *s
 
 func (e *Signup) ResetPassword(ctx context.Context, req *signup.ResetPasswordRequest, rsp *signup.ResetPasswordResponse) error {
 	m := map[string]interface{}{}
-	err := e.resetCode.Read(model.QueryByID(req.Email), &m)
+	if req.Email == "" {
+		return errors.New("Email is required")
+	}
+	err := e.resetCode.Read(model.QueryEquals("ID", req.Email), &m)
 	if err != nil {
 		return err
 	}
 	id, idOk := m["ID"].(string)
-	if !idOk || id != "" {
+	if !idOk || id == "" {
 		return errors.New("can't find token")
 	}
-	_, err = e.accounts.ChangeSecret(nil, &authproto.ChangeSecretRequest{
+	tok, tokOk := m["token"].(string)
+	if !tokOk || tok == "" {
+		return errors.New("can't find token")
+	}
+	if tok != req.Token {
+		return errors.New("tokens don't match")
+	}
+
+	_, err = e.accounts.ChangeSecret(cont.DefaultContext, &authproto.ChangeSecretRequest{
 		Id:        req.Email,
 		NewSecret: req.Password,
+		Options: &authproto.Options{
+			Namespace: req.Namespace,
+		},
 	}, client.WithAuthToken())
 	return err
 }
