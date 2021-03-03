@@ -81,8 +81,11 @@ func (e *Datastore) authAction(ctx context.Context, project, table, action strin
 		log.Infof("Role %v action %v, unregistered %v, user %v", rule.Role, rule.Action, unregisteredEnabled, userEnabled)
 	}
 	acc, ok := auth.AccountFromContext(ctx)
-	if !unregisteredEnabled && !ok {
-		return errors.New("unauthorized: need to be registered")
+	if acc == nil && unregisteredEnabled {
+		return nil
+	}
+	if ok && userEnabled {
+		return nil
 	}
 	if !userEnabled {
 		owner, err := e.getOwner(ctx, project, table)
