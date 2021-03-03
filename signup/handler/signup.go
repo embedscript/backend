@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math/rand"
 	"strings"
@@ -12,19 +13,21 @@ import (
 	"github.com/patrickmn/go-cache"
 
 	eproto "github.com/embedscript/backend/emails/proto"
+	signup "github.com/embedscript/backend/signup/proto"
 	aproto "github.com/m3o/services/alert/proto/alert"
 	cproto "github.com/m3o/services/customers/proto"
 	inviteproto "github.com/m3o/services/invite/proto"
 	nproto "github.com/m3o/services/namespaces/proto"
 	pproto "github.com/m3o/services/payments/proto"
-	signup "github.com/m3o/services/signup/proto/signup"
 	sproto "github.com/m3o/services/subscriptions/proto"
+	authproto "github.com/micro/micro/v3/proto/auth"
 	"github.com/micro/micro/v3/service"
 	"github.com/micro/micro/v3/service/auth"
 	"github.com/micro/micro/v3/service/client"
 	mconfig "github.com/micro/micro/v3/service/config"
 	merrors "github.com/micro/micro/v3/service/errors"
 	logger "github.com/micro/micro/v3/service/logger"
+	model "github.com/micro/micro/v3/service/model"
 	mstore "github.com/micro/micro/v3/service/store"
 )
 
@@ -57,8 +60,10 @@ type Signup struct {
 	paymentService      pproto.ProviderService
 	emailService        eproto.EmailsService
 	auth                auth.Auth
+	accounts            authproto.AccountsService
 	config              conf
 	cache               *cache.Cache
+	resetCode           model.Model
 }
 
 var (
@@ -106,9 +111,11 @@ func NewSignup(srv *service.Service, auth auth.Auth) *Signup {
 		paymentService:      pproto.NewProviderService("payments", srv.Client()),
 		emailService:        eproto.NewEmailsService("emails", srv.Client()),
 		auth:                auth,
+		accounts:            authproto.NewAccountsService("auth", srv.Client()),
 		config:              c,
 		cache:               cache.New(1*time.Minute, 5*time.Minute),
 		alertService:        aproto.NewAlertService("alert", srv.Client()),
+		resetCode:           model.New(map[string]interface{}{}, nil),
 	}
 	return s
 }
@@ -326,6 +333,15 @@ func (e *Signup) Recover(ctx context.Context, req *signup.RecoverRequest, rsp *s
 		return merrors.BadRequest("signup.recover", "We have issued a recovery email recently. Please check that.")
 	}
 
+	token := uuid.New().String()
+	err := e.resetCode.Create(map[string]interface{}{
+		"ID":    req.Email,
+		"token": token,
+	})
+	logger.Infof("Sent recovery code %v to email %v", token, req.Email)
+	if err != nil {
+		return merrors.InternalServerError("signup.recover", err.Error())
+	}
 	custResp, err := e.customerService.Read(ctx, &cproto.ReadRequest{Email: req.Email}, client.WithAuthToken())
 	if err != nil {
 		merr := merrors.FromError(err)
@@ -361,5 +377,22 @@ func (e *Signup) Recover(ctx context.Context, req *signup.RecoverRequest, rsp *s
 		e.cache.Set(req.Email, true, cache.DefaultExpiration)
 	}
 
+	return err
+}
+
+func (e *Signup) ResetPassword(ctx context.Context, req *signup.ResetPasswordRequest, rsp *signup.ResetPasswordResponse) error {
+	m := map[string]interface{}{}
+	err := e.resetCode.Read(model.QueryByID(req.Email), &m)
+	if err != nil {
+		return err
+	}
+	id, idOk := m["ID"].(string)
+	if !idOk || id != "" {
+		return errors.New("can't find token")
+	}
+	_, err = e.accounts.ChangeSecret(nil, &authproto.ChangeSecretRequest{
+		Id:        req.Email,
+		NewSecret: req.Password,
+	}, client.WithAuthToken())
 	return err
 }
