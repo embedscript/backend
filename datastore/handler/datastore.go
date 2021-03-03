@@ -147,6 +147,22 @@ func (e *Datastore) getRules(ctx context.Context, project, table string) ([]Rule
 	return result, nil
 }
 
+func (e *Datastore) saveRule(ctx context.Context, rule *datastore.Rule) error {
+	if rule.Project == "" || rule.Action == "" || rule.Role == "" {
+		return errors.New("empty rule field")
+	}
+	ownerDb := model.New(map[string]interface{}{}, &model.Options{
+		Namespace: rule.Project + rule.Table + "rules",
+	})
+	return ownerDb.Create(Rule{
+		ID: rule.Role + rule.Action,
+		Rule: datastore.Rule{
+			Action: rule.Action,
+			Role:   rule.Role,
+		},
+	})
+}
+
 func (e *Datastore) getOwner(ctx context.Context, project, table string) ([]Owner, error) {
 	indexDb := model.New(map[string]interface{}{}, &model.Options{
 		Namespace: project + "owners",
@@ -167,18 +183,6 @@ func (e *Datastore) saveOwner(ctx context.Context, project, table, ownerID strin
 		ID: ownerID,
 	})
 	return nil
-}
-
-func (e *Datastore) saveRule(ctx context.Context, rule *datastore.Rule) error {
-	if rule.Project == "" || rule.Action == "" || rule.Role == "" {
-		return errors.New("empty rule field")
-	}
-	ownerDb := model.New(map[string]interface{}{}, &model.Options{
-		Namespace: rule.Project + rule.Table + "rules",
-	})
-	return ownerDb.Create(Rule{
-		ID: rule.Role + rule.Action,
-	})
 }
 
 func (e *Datastore) Read(ctx context.Context, req *datastore.ReadRequest, rsp *datastore.ReadResponse) error {
