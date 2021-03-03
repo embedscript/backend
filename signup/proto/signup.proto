@@ -12,7 +12,7 @@ service Signup {
 	// Creates a subscription and an account
 	rpc CompleteSignup(CompleteSignupRequest) returns (CompleteSignupResponse);
 	rpc Recover(RecoverRequest) returns (RecoverResponse);
-		rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+	rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
 }
 
 message SendVerificationEmailRequest {
