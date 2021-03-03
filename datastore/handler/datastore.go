@@ -80,24 +80,29 @@ func (e *Datastore) authAction(ctx context.Context, project, table, action strin
 		}
 		log.Infof("Role %v action %v, unregistered %v, user %v", rule.Role, rule.Action, unregisteredEnabled, userEnabled)
 	}
-	acc, ok := auth.AccountFromContext(ctx)
-	if acc == nil && unregisteredEnabled {
+	// anyone can call this endpoint
+	if unregisteredEnabled {
 		return nil
 	}
-	if ok && userEnabled {
+	// at this point it must be a registered user
+	acc, hasAccount := auth.AccountFromContext(ctx)
+	if !hasAccount {
+		return errors.New("unauthorized - need to be registered")
+	}
+	// if a simple user is enough, let it paass
+	if userEnabled {
 		return nil
 	}
-	if !userEnabled {
-		owner, err := e.getOwner(ctx, project, table)
-		if err != nil {
-			return err
-		}
-		if len(owners) == 0 {
-			return errNoOwners
-		}
-		if owner[0].ID != acc.ID {
-			return errors.New("unauthorized: not an owner")
-		}
+	// otherwise check for admin
+	owner, err := e.getOwner(ctx, project, table)
+	if err != nil {
+		return err
+	}
+	if len(owners) == 0 {
+		return errNoOwners
+	}
+	if owner[0].ID != acc.ID {
+		return errors.New("unauthorized: not an owner")
 	}
 	return nil
 }
