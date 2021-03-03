@@ -75,6 +75,7 @@ func (e *Datastore) authAction(ctx context.Context, project, table, action strin
 		case rule.Action == action && rule.Role == "user":
 			userEnabled = true
 		}
+		log.Infof("Role %v action %v, unregistered %v, user %v", rule.Role, rule.Action, unregisteredEnabled, userEnabled)
 	}
 	acc, ok := auth.AccountFromContext(ctx)
 	if !unregisteredEnabled && !ok {
