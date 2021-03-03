@@ -51,6 +51,16 @@
         },
         "description": "DatastoreReadRequest"
       },
+      "DatastoreReadRulesRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ReadRulesRequest"
+            }
+          }
+        },
+        "description": "DatastoreReadRulesRequest"
+      },
       "DatastoreUpdateRequest": {
         "content": {
           "application/json": {
@@ -112,6 +122,16 @@
           }
         },
         "description": "DatastoreReadResponse"
+      },
+      "DatastoreReadRulesResponse": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ReadRulesResponse"
+            }
+          }
+        },
+        "description": "DatastoreReadRulesResponse"
       },
       "DatastoreUpdateResponse": {
         "content": {
@@ -683,6 +703,46 @@
         "title": "ReadResponse",
         "type": "object"
       },
+      "ReadRulesRequest": {
+        "properties": {
+          "project": {
+            "type": "string"
+          },
+          "table": {
+            "type": "string"
+          }
+        },
+        "title": "ReadRulesRequest",
+        "type": "object"
+      },
+      "ReadRulesResponse": {
+        "properties": {
+          "rules": {
+            "items": {
+              "properties": {
+                "action": {
+                  "description": "write, read",
+                  "type": "string"
+                },
+                "project": {
+                  "type": "string"
+                },
+                "role": {
+                  "description": "roles: admin, user, unregistered",
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "title": "ReadRulesResponse",
+        "type": "object"
+      },
       "Rule": {
         "properties": {
           "action": {
@@ -898,6 +958,37 @@
           }
         ],
         "summary": "Datastore.Read(ReadRequest)"
+      }
+    },
+    "/datastore/Datastore/ReadRules": {
+      "parameters": [
+        {
+          "in": "header",
+          "name": "Micro-Namespace",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DatastoreReadRulesRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DatastoreReadRulesResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/MicroAPIError"
+          }
+        },
+        "security": [
+          {
+            "MicroAPIToken": []
+          }
+        ],
+        "summary": "Datastore.ReadRules(ReadRulesRequest)"
       }
     },
     "/datastore/Datastore/Update": {

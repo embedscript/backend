@@ -13,6 +13,7 @@ service Datastore {
 	rpc Delete(DeleteRequest) returns (DeleteResponse) {}
 	rpc CreateIndex(CreateIndexRequest) returns (CreateIndexResponse) {}
 	rpc CreateRule(CreateRuleRequest) returns (CreateRuleResponse) {}
+	rpc ReadRules(ReadRulesRequest) returns (ReadRulesResponse) {};
 }
 
 message Query {
@@ -143,4 +144,13 @@ message CreateRuleRequest {
 
 message CreateRuleResponse {
 
+}
+
+message ReadRulesRequest {
+	string project = 1;
+	string table = 2;
+}
+
+message ReadRulesResponse {
+	repeated Rule rules = 1;
 }

@@ -255,6 +255,34 @@ func (e *Datastore) CreateRule(ctx context.Context, req *datastore.CreateRuleReq
 	return e.saveRule(ctx, req.Rule)
 }
 
+func (e *Datastore) ReadRules(ctx context.Context, req *datastore.ReadRulesRequest, rsp *datastore.ReadRulesResponse) error {
+	log.Info("Received Datastore.ReadRules request")
+	owners, err := e.getOwner(ctx, req.Project, req.Table)
+	if err != nil {
+		return err
+	}
+	acc, ok := auth.AccountFromContext(ctx)
+	if !ok {
+		return errors.New("unauthorized")
+	}
+	if len(owners) > 0 && owners[0].ID != acc.ID {
+		return errors.New("unauthorized - not owner")
+	}
+	err = e.saveOwner(ctx, req.Project, req.Table, acc.ID)
+	if err != nil {
+		return err
+	}
+	rules, err := e.getRules(ctx, req.Project, req.Table)
+	if err != nil {
+		return err
+	}
+	rsp.Rules = []*datastore.Rule{}
+	for _, rule := range rules {
+		rsp.Rules = append(rsp.Rules, &rule.Rule)
+	}
+	return nil
+}
+
 func (e *Datastore) Delete(ctx context.Context, req *datastore.DeleteRequest, rsp *datastore.DeleteResponse) error {
 	log.Info("Received Datastore.Delete request")
 	err := e.authAction(ctx, req.Project, req.Table, "delete")

@@ -1036,6 +1036,108 @@ func (*CreateRuleResponse) Descriptor() ([]byte, []int) {
 	return file_proto_datastore_proto_rawDescGZIP(), []int{15}
 }
 
+type ReadRulesRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Project string `protobuf:"bytes,1,opt,name=project,proto3" json:"project,omitempty"`
+	Table   string `protobuf:"bytes,2,opt,name=table,proto3" json:"table,omitempty"`
+}
+
+func (x *ReadRulesRequest) Reset() {
+	*x = ReadRulesRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_datastore_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ReadRulesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReadRulesRequest) ProtoMessage() {}
+
+func (x *ReadRulesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_datastore_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReadRulesRequest.ProtoReflect.Descriptor instead.
+func (*ReadRulesRequest) Descriptor() ([]byte, []int) {
+	return file_proto_datastore_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *ReadRulesRequest) GetProject() string {
+	if x != nil {
+		return x.Project
+	}
+	return ""
+}
+
+func (x *ReadRulesRequest) GetTable() string {
+	if x != nil {
+		return x.Table
+	}
+	return ""
+}
+
+type ReadRulesResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Rules []*Rule `protobuf:"bytes,1,rep,name=rules,proto3" json:"rules,omitempty"`
+}
+
+func (x *ReadRulesResponse) Reset() {
+	*x = ReadRulesResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_datastore_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ReadRulesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReadRulesResponse) ProtoMessage() {}
+
+func (x *ReadRulesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_datastore_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReadRulesResponse.ProtoReflect.Descriptor instead.
+func (*ReadRulesResponse) Descriptor() ([]byte, []int) {
+	return file_proto_datastore_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *ReadRulesResponse) GetRules() []*Rule {
+	if x != nil {
+		return x.Rules
+	}
+	return nil
+}
+
 var File_proto_datastore_proto protoreflect.FileDescriptor
 
 var file_proto_datastore_proto_rawDesc = []byte{
@@ -1132,7 +1234,15 @@ var file_proto_datastore_proto_rawDesc = []byte{
 	0x04, 0x72, 0x75, 0x6c, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x64, 0x61,
 	0x74, 0x61, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x2e, 0x52, 0x75, 0x6c, 0x65, 0x52, 0x04, 0x72, 0x75,
 	0x6c, 0x65, 0x22, 0x14, 0x0a, 0x12, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x75, 0x6c, 0x65,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xa6, 0x03, 0x0a, 0x09, 0x44, 0x61, 0x74,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x42, 0x0a, 0x10, 0x52, 0x65, 0x61, 0x64,
+	0x52, 0x75, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x18, 0x0a, 0x07,
+	0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x70,
+	0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x61, 0x62, 0x6c, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x61, 0x62, 0x6c, 0x65, 0x22, 0x3a, 0x0a, 0x11,
+	0x52, 0x65, 0x61, 0x64, 0x52, 0x75, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x25, 0x0a, 0x05, 0x72, 0x75, 0x6c, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x0f, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x2e, 0x52, 0x75, 0x6c,
+	0x65, 0x52, 0x05, 0x72, 0x75, 0x6c, 0x65, 0x73, 0x32, 0xf0, 0x03, 0x0a, 0x09, 0x44, 0x61, 0x74,
 	0x61, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x12, 0x3f, 0x0a, 0x06, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
 	0x12, 0x18, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x2e, 0x43, 0x72, 0x65,
 	0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x19, 0x2e, 0x64, 0x61, 0x74,
@@ -1159,8 +1269,13 @@ var file_proto_datastore_proto_rawDesc = []byte{
 	0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x75, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
 	0x1a, 0x1d, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x2e, 0x43, 0x72, 0x65,
 	0x61, 0x74, 0x65, 0x52, 0x75, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x00, 0x42, 0x11, 0x5a, 0x0f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x3b, 0x64, 0x61, 0x74, 0x61, 0x73,
-	0x74, 0x6f, 0x72, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x00, 0x12, 0x48, 0x0a, 0x09, 0x52, 0x65, 0x61, 0x64, 0x52, 0x75, 0x6c, 0x65, 0x73, 0x12, 0x1b,
+	0x2e, 0x64, 0x61, 0x74, 0x61, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x2e, 0x52, 0x65, 0x61, 0x64, 0x52,
+	0x75, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1c, 0x2e, 0x64, 0x61,
+	0x74, 0x61, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x2e, 0x52, 0x65, 0x61, 0x64, 0x52, 0x75, 0x6c, 0x65,
+	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x11, 0x5a, 0x0f, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x3b, 0x64, 0x61, 0x74, 0x61, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1176,7 +1291,7 @@ func file_proto_datastore_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_datastore_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_proto_datastore_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_proto_datastore_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_proto_datastore_proto_goTypes = []interface{}{
 	(Order_OrderType)(0),        // 0: datastore.Order.OrderType
 	(*Query)(nil),               // 1: datastore.Query
@@ -1195,6 +1310,8 @@ var file_proto_datastore_proto_goTypes = []interface{}{
 	(*Rule)(nil),                // 14: datastore.Rule
 	(*CreateRuleRequest)(nil),   // 15: datastore.CreateRuleRequest
 	(*CreateRuleResponse)(nil),  // 16: datastore.CreateRuleResponse
+	(*ReadRulesRequest)(nil),    // 17: datastore.ReadRulesRequest
+	(*ReadRulesResponse)(nil),   // 18: datastore.ReadRulesResponse
 }
 var file_proto_datastore_proto_depIdxs = []int32{
 	3,  // 0: datastore.Query.index:type_name -> datastore.Index
@@ -1205,23 +1322,26 @@ var file_proto_datastore_proto_depIdxs = []int32{
 	1,  // 5: datastore.DeleteRequest.query:type_name -> datastore.Query
 	3,  // 6: datastore.CreateIndexRequest.index:type_name -> datastore.Index
 	14, // 7: datastore.CreateRuleRequest.rule:type_name -> datastore.Rule
-	4,  // 8: datastore.Datastore.Create:input_type -> datastore.CreateRequest
-	6,  // 9: datastore.Datastore.Update:input_type -> datastore.UpdateRequest
-	8,  // 10: datastore.Datastore.Read:input_type -> datastore.ReadRequest
-	10, // 11: datastore.Datastore.Delete:input_type -> datastore.DeleteRequest
-	12, // 12: datastore.Datastore.CreateIndex:input_type -> datastore.CreateIndexRequest
-	15, // 13: datastore.Datastore.CreateRule:input_type -> datastore.CreateRuleRequest
-	5,  // 14: datastore.Datastore.Create:output_type -> datastore.CreateResponse
-	7,  // 15: datastore.Datastore.Update:output_type -> datastore.UpdateResponse
-	9,  // 16: datastore.Datastore.Read:output_type -> datastore.ReadResponse
-	11, // 17: datastore.Datastore.Delete:output_type -> datastore.DeleteResponse
-	13, // 18: datastore.Datastore.CreateIndex:output_type -> datastore.CreateIndexResponse
-	16, // 19: datastore.Datastore.CreateRule:output_type -> datastore.CreateRuleResponse
-	14, // [14:20] is the sub-list for method output_type
-	8,  // [8:14] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	14, // 8: datastore.ReadRulesResponse.rules:type_name -> datastore.Rule
+	4,  // 9: datastore.Datastore.Create:input_type -> datastore.CreateRequest
+	6,  // 10: datastore.Datastore.Update:input_type -> datastore.UpdateRequest
+	8,  // 11: datastore.Datastore.Read:input_type -> datastore.ReadRequest
+	10, // 12: datastore.Datastore.Delete:input_type -> datastore.DeleteRequest
+	12, // 13: datastore.Datastore.CreateIndex:input_type -> datastore.CreateIndexRequest
+	15, // 14: datastore.Datastore.CreateRule:input_type -> datastore.CreateRuleRequest
+	17, // 15: datastore.Datastore.ReadRules:input_type -> datastore.ReadRulesRequest
+	5,  // 16: datastore.Datastore.Create:output_type -> datastore.CreateResponse
+	7,  // 17: datastore.Datastore.Update:output_type -> datastore.UpdateResponse
+	9,  // 18: datastore.Datastore.Read:output_type -> datastore.ReadResponse
+	11, // 19: datastore.Datastore.Delete:output_type -> datastore.DeleteResponse
+	13, // 20: datastore.Datastore.CreateIndex:output_type -> datastore.CreateIndexResponse
+	16, // 21: datastore.Datastore.CreateRule:output_type -> datastore.CreateRuleResponse
+	18, // 22: datastore.Datastore.ReadRules:output_type -> datastore.ReadRulesResponse
+	16, // [16:23] is the sub-list for method output_type
+	9,  // [9:16] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_proto_datastore_proto_init() }
@@ -1422,6 +1542,30 @@ func file_proto_datastore_proto_init() {
 				return nil
 			}
 		}
+		file_proto_datastore_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ReadRulesRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_datastore_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ReadRulesResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1429,7 +1573,7 @@ func file_proto_datastore_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_proto_datastore_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   16,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
