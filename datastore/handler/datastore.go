@@ -69,6 +69,9 @@ func (e *Datastore) authAction(ctx context.Context, project, table, action strin
 	unregisteredEnabled := false
 	userEnabled := false
 	for _, rule := range rules {
+		if rule.Action == "" || rule.Role == "" {
+			return errors.New("empty role or action in rule")
+		}
 		switch {
 		case rule.Action == action && rule.Role == "unregistered":
 			unregisteredEnabled = true
