@@ -73,6 +73,12 @@ var (
 	Message = "Please complete signup at https://m3o.com/subscribe?email=%s. This command will now wait for you to finish."
 )
 
+type ResetToken struct {
+	Created int64
+	ID      string
+	Token   string
+}
+
 type sendgridConf struct {
 	TemplateID         string `json:"template_id"`
 	RecoveryTemplateID string `json:"recovery_template_id"`
@@ -116,7 +122,7 @@ func NewSignup(srv *service.Service, auth auth.Auth) *Signup {
 		config:              c,
 		cache:               cache.New(1*time.Minute, 5*time.Minute),
 		alertService:        aproto.NewAlertService("alert", srv.Client()),
-		resetCode:           model.New(map[string]interface{}{}, nil),
+		resetCode:           model.New(ResetToken{}, nil),
 	}
 	return s
 }
@@ -335,9 +341,11 @@ func (e *Signup) Recover(ctx context.Context, req *signup.RecoverRequest, rsp *s
 	}
 
 	token := uuid.New().String()
-	err := e.resetCode.Create(map[string]interface{}{
-		"ID":    req.Email,
-		"token": token,
+	created := time.Now().Unix()
+	err := e.resetCode.Create(ResetToken{
+		ID:      req.Email,
+		Token:   token,
+		Created: created,
 	})
 	logger.Infof("Sent recovery code %v to email %v", token, req.Email)
 	if err != nil {
@@ -373,6 +381,7 @@ func (e *Signup) Recover(ctx context.Context, req *signup.RecoverRequest, rsp *s
 	logger.Infof("Sending email with data %v", namespaces)
 	err = e.sendEmail(ctx, req.Email, e.config.Sendgrid.RecoveryTemplateID, map[string]interface{}{
 		"namespaces": namespaces,
+		"token":      token,
 	})
 	if err == nil {
 		e.cache.Set(req.Email, true, cache.DefaultExpiration)
@@ -382,7 +391,7 @@ func (e *Signup) Recover(ctx context.Context, req *signup.RecoverRequest, rsp *s
 }
 
 func (e *Signup) ResetPassword(ctx context.Context, req *signup.ResetPasswordRequest, rsp *signup.ResetPasswordResponse) error {
-	m := map[string]interface{}{}
+	m := ResetToken{}
 	if req.Email == "" {
 		return errors.New("Email is required")
 	}
@@ -390,16 +399,21 @@ func (e *Signup) ResetPassword(ctx context.Context, req *signup.ResetPasswordReq
 	if err != nil {
 		return err
 	}
-	id, idOk := m["ID"].(string)
-	if !idOk || id == "" {
+
+	if m.ID == "" {
 		return errors.New("can't find token")
 	}
-	tok, tokOk := m["token"].(string)
-	if !tokOk || tok == "" {
+	if m.Token == "" {
 		return errors.New("can't find token")
 	}
-	if tok != req.Token {
+	if m.Created == 0 {
+		return errors.New("expiry can't be calculated")
+	}
+	if m.Token != req.Token {
 		return errors.New("tokens don't match")
+	}
+	if time.Unix(m.Created, 0).Before(time.Now().Add(10 * time.Minute)) {
+		return errors.New("token expired")
 	}
 
 	_, err = e.accounts.ChangeSecret(cont.DefaultContext, &authproto.ChangeSecretRequest{
