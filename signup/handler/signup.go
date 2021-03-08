@@ -395,5 +395,9 @@ func (e *Signup) ResetPassword(ctx context.Context, req *signup.ResetPasswordReq
 			Namespace: req.Namespace,
 		},
 	}, client.WithAuthToken())
+	if err != nil {
+		return err
+	}
+	e.resetCode.Delete(model.QueryByID(m.ID))
 	return err
 }
