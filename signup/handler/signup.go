@@ -351,37 +351,9 @@ func (e *Signup) Recover(ctx context.Context, req *signup.RecoverRequest, rsp *s
 	if err != nil {
 		return merrors.InternalServerError("signup.recover", err.Error())
 	}
-	custResp, err := e.customerService.Read(ctx, &cproto.ReadRequest{Email: req.Email}, client.WithAuthToken())
-	if err != nil {
-		merr := merrors.FromError(err)
-		if merr.Code == 404 { // not found
-			return merrors.NotFound("signup.recover", "Could not find an account with that email address")
-		}
-		return merrors.InternalServerError("signup.recover", "Error looking up account")
-	}
 
-	listRsp, err := e.namespaceService.List(ctx, &nproto.ListRequest{
-		User: custResp.Customer.Id,
-	}, client.WithAuthToken())
-	if err != nil {
-		return merrors.InternalServerError("signup.recover", "Error calling namespace service: %v", err)
-	}
-	if len(listRsp.Namespaces) == 0 {
-		return merrors.BadRequest("signup.recover", "We don't recognize this account")
-	}
-
-	// Sendgrid wants objects in a list not string
-	namespaces := []map[string]string{}
-	for _, v := range listRsp.Namespaces {
-		namespaces = append(namespaces, map[string]string{
-			"id": v.Id,
-		})
-	}
-
-	logger.Infof("Sending email with data %v", namespaces)
 	err = e.sendEmail(ctx, req.Email, e.config.Sendgrid.RecoveryTemplateID, map[string]interface{}{
-		"namespaces": namespaces,
-		"token":      token,
+		"token": token,
 	})
 	if err == nil {
 		e.cache.Set(req.Email, true, cache.DefaultExpiration)
