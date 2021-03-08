@@ -384,7 +384,7 @@ func (e *Signup) ResetPassword(ctx context.Context, req *signup.ResetPasswordReq
 	if m.Token != req.Token {
 		return errors.New("tokens don't match")
 	}
-	if time.Unix(m.Created, 0).Before(time.Now().Add(10 * time.Minute)) {
+	if time.Unix(m.Created, 0).Before(time.Now().Add(-1 * 10 * time.Minute)) {
 		return errors.New("token expired")
 	}
 
