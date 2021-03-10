@@ -46,7 +46,7 @@ func (e *V1) ServeInOne(ctx context.Context, req *pb.Request, rsp *pb.Response) 
 func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error {
 	files := filesproto.NewFilesService("files", client.DefaultClient)
 
-	if len(req.Get) == 0 || len(req.Get["project"].Values) == 0 {
+	if req.Get["project"] == nil || len(req.Get["project"].Values) == 0 {
 		return errors.New("bad request")
 	}
 	project := req.Get["project"].Values[0]
@@ -56,29 +56,39 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	script := req.Get["script"].Values[0]
 	logger.Infof("Serving %v", script)
 
-	resp, err := files.List(ctx, &filesproto.ListRequest{
-		Project: script,
-	})
-	if err != nil {
-		return err
-	}
-	if len(resp.Files) == 0 {
-		return errors.New("not found")
-	}
-
 	htmlFile := ""
 	jsFile := ""
 	cssFile := ""
-	for _, file := range resp.Files {
-		switch {
-		case strings.Contains(file.Path, "main"):
-			jsFile = file.FileContents
-		case strings.Contains(file.Path, "index"):
-			htmlFile = file.FileContents
-		case strings.Contains(file.Path, "style"):
-			cssFile = file.FileContents
+
+	if req.Get["javascript"] != nil && len(req.Get["javascript"].Values) > 0 &&
+		req.Get["html"] != nil && len(req.Get["html"].Values) > 0 &&
+		req.Get["css"] != nil && len(req.Get["css"].Values) > 0 {
+		jsFile = req.Get["javascript"].Values[0]
+		htmlFile = req.Get["html"].Values[0]
+		cssFile = req.Get["html"].Values[0]
+	} else {
+		resp, err := files.List(ctx, &filesproto.ListRequest{
+			Project: script,
+		})
+		if err != nil {
+			return err
+		}
+		if len(resp.Files) == 0 {
+			return errors.New("not found")
+		}
+
+		for _, file := range resp.Files {
+			switch {
+			case strings.Contains(file.Path, "main"):
+				jsFile = file.FileContents
+			case strings.Contains(file.Path, "index"):
+				htmlFile = file.FileContents
+			case strings.Contains(file.Path, "style"):
+				cssFile = file.FileContents
+			}
 		}
 	}
+
 	id, _ := uuid.NewV4()
 
 	rendered := `<html>
