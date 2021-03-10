@@ -50,11 +50,11 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		return errors.New("bad request")
 	}
 	project := req.Get["project"].Values[0]
-	if len(req.Get) == 0 || len(req.Get["script"].Values) == 0 {
-		return errors.New("bad request")
+	script := ""
+	if req.Get["scripts"] != nil && len(req.Get["script"].Values) > 0 {
+		script = req.Get["script"].Values[0]
+		logger.Infof("Serving %v", script)
 	}
-	script := req.Get["script"].Values[0]
-	logger.Infof("Serving %v", script)
 
 	htmlFile := ""
 	jsFile := ""
