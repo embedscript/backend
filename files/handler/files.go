@@ -60,7 +60,10 @@ func (e *Files) Save(ctx context.Context, req *files.SaveRequest, rsp *files.Sav
 		if f.Id != "" && f.Owner != acc.ID {
 			return errors.New("Not authorized")
 		}
-		if file.IndexByOwner {
+		if acc.Metadata != nil && acc.Metadata["username"] != "" {
+			f.Username = acc.Metadata["username"]
+		}
+		if !strings.Contains(file.Project, "preview") {
 			err = e.db.Create(file)
 		} else {
 			err = e.dbPartialIndexed.Create(file)

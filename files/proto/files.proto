@@ -25,7 +25,8 @@ message File {
 	int64 updated = 8;
 	// owner
 	string owner = 9;
-	bool indexByOwner = 10;
+	// owner username
+	string username = 10;
 }
 
 // The save endpoint lets you batch save text files.
