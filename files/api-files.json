@@ -1,0 +1,310 @@
+{
+  "components": {
+    "requestBodies": {
+      "FilesListRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ListRequest"
+            }
+          }
+        },
+        "description": "FilesListRequest"
+      },
+      "FilesSaveRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SaveRequest"
+            }
+          }
+        },
+        "description": "FilesSaveRequest"
+      }
+    },
+    "responses": {
+      "FilesListResponse": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ListResponse"
+            }
+          }
+        },
+        "description": "FilesListResponse"
+      },
+      "FilesSaveResponse": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SaveResponse"
+            }
+          }
+        },
+        "description": "FilesSaveResponse"
+      },
+      "MicroAPIError": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "Code": {
+                  "description": "Error code",
+                  "example": 500,
+                  "type": "number"
+                },
+                "Detail": {
+                  "description": "Error detail",
+                  "example": "service not found",
+                  "type": "string"
+                },
+                "Id": {
+                  "description": "Error ID",
+                  "type": "string"
+                },
+                "Status": {
+                  "description": "Error status message",
+                  "example": "Internal Server Error",
+                  "type": "string"
+                }
+              },
+              "title": "MicroAPIError",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Error from the Micro API"
+      }
+    },
+    "schemas": {
+      "File": {
+        "properties": {
+          "created": {
+            "format": "int64",
+            "type": "number"
+          },
+          "fileContents": {
+            "description": "File contents. Empty for directories.",
+            "type": "string"
+          },
+          "isDirectory": {
+            "type": "boolean"
+          },
+          "name": {
+            "description": "Name of folder or file.",
+            "type": "string"
+          },
+          "path": {
+            "description": "Path. Default is '/', ie. top level",
+            "type": "string"
+          },
+          "project": {
+            "description": "A custom string for namespacing purposes\n eg. files-of-mywebsite.com",
+            "type": "string"
+          },
+          "updated": {
+            "format": "int64",
+            "type": "number"
+          }
+        },
+        "title": "File",
+        "type": "object"
+      },
+      "ListRequest": {
+        "description": "List files by their project and optionally a path.",
+        "properties": {
+          "path": {
+            "description": "Defaults to '/', ie. lists all files in a project.\n Supply path if of a folder if you want to list\n file inside that folder\n eg. '/docs'",
+            "type": "string"
+          },
+          "project": {
+            "description": "Project, required for listing.",
+            "type": "string"
+          }
+        },
+        "title": "ListRequest",
+        "type": "object"
+      },
+      "ListResponse": {
+        "properties": {
+          "files": {
+            "items": {
+              "properties": {
+                "created": {
+                  "format": "int64",
+                  "type": "number"
+                },
+                "fileContents": {
+                  "description": "File contents. Empty for directories.",
+                  "type": "string"
+                },
+                "isDirectory": {
+                  "type": "boolean"
+                },
+                "name": {
+                  "description": "Name of folder or file.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "Path. Default is '/', ie. top level",
+                  "type": "string"
+                },
+                "project": {
+                  "description": "A custom string for namespacing purposes\n eg. files-of-mywebsite.com",
+                  "type": "string"
+                },
+                "updated": {
+                  "format": "int64",
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "title": "ListResponse",
+        "type": "object"
+      },
+      "SaveRequest": {
+        "description": "The save endpoint lets you batch save text files.",
+        "properties": {
+          "files": {
+            "items": {
+              "properties": {
+                "created": {
+                  "format": "int64",
+                  "type": "number"
+                },
+                "fileContents": {
+                  "description": "File contents. Empty for directories.",
+                  "type": "string"
+                },
+                "isDirectory": {
+                  "type": "boolean"
+                },
+                "name": {
+                  "description": "Name of folder or file.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "Path. Default is '/', ie. top level",
+                  "type": "string"
+                },
+                "project": {
+                  "description": "A custom string for namespacing purposes\n eg. files-of-mywebsite.com",
+                  "type": "string"
+                },
+                "updated": {
+                  "format": "int64",
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "title": "SaveRequest",
+        "type": "object"
+      },
+      "SaveResponse": {
+        "title": "SaveResponse",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "MicroAPIToken": {
+        "bearerFormat": "JWT",
+        "description": "Micro API token",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "description": "Generated by protoc-gen-openapi",
+    "title": "Files",
+    "version": "1",
+    "x-logo": {
+      "altText": "Micro logo",
+      "backgroundColor": "#FFFFFF",
+      "url": "https://micro.mu/images/brand.png"
+    }
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/files/Files/List": {
+      "parameters": [
+        {
+          "in": "header",
+          "name": "Micro-Namespace",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "requestBody": {
+          "$ref": "#/components/requestBodies/FilesListRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FilesListResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/MicroAPIError"
+          }
+        },
+        "security": [
+          {
+            "MicroAPIToken": []
+          }
+        ],
+        "summary": "Files.List(ListRequest)"
+      }
+    },
+    "/files/Files/Save": {
+      "parameters": [
+        {
+          "in": "header",
+          "name": "Micro-Namespace",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "requestBody": {
+          "$ref": "#/components/requestBodies/FilesSaveRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FilesSaveResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/MicroAPIError"
+          }
+        },
+        "security": [
+          {
+            "MicroAPIToken": []
+          }
+        ],
+        "summary": "Files.Save(SaveRequest)"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.m3o.dev",
+      "description": "Micro DEV environment"
+    },
+    {
+      "url": "https://api.m3o.com",
+      "description": "Micro LIVE environment"
+    }
+  ]
+}
