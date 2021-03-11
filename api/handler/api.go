@@ -51,7 +51,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	}
 	project := req.Get["project"].Values[0]
 	script := ""
-	if req.Get["scripts"] != nil && len(req.Get["script"].Values) > 0 {
+	if req.Get["script"] != nil && len(req.Get["script"].Values) > 0 {
 		script = req.Get["script"].Values[0]
 		logger.Infof("Serving %v", script)
 	}
