@@ -82,6 +82,8 @@ message CompleteSignupRequest {
 	string secret = 4;
 	// Which namespace to sign up to based on previous invite
 	string namespace = 5;
+	// ie. "jane32"
+	string username = 6;
 }
 
 message CompleteSignupResponse {
