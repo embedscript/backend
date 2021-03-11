@@ -20,7 +20,7 @@ func NewFiles() *Files {
 	i := model.ByEquality("project")
 	i.Order.Type = model.OrderTypeUnordered
 
-	byOwnerID := model.ByEquality("owner")
+	byOwnerID := model.ByEquality("username")
 	byOwnerID.Order.FieldName = "created"
 	byOwnerID.Order.Type = model.OrderTypeDesc
 
@@ -100,7 +100,7 @@ func (e *Files) List(ctx context.Context, req *files.ListRequest, rsp *files.Lis
 		return nil
 	}
 	if req.Owner != "" {
-		err := e.db.Read(model.QueryEquals("owner", req.GetOwner()), &rsp.Files)
+		err := e.db.Read(model.QueryEquals("username", req.GetOwner()), &rsp.Files)
 		if err != nil {
 			return err
 		}

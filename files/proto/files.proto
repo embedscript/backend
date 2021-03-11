@@ -48,8 +48,8 @@ message ListRequest {
 	// eg. '/docs'
 	string path = 2;
 
-	// list by owner instead of project
-	string owner = 3;
+	// list by owner username instead of project
+	string username = 3;
 }
 
 message ListResponse {
