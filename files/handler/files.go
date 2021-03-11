@@ -99,8 +99,8 @@ func (e *Files) List(ctx context.Context, req *files.ListRequest, rsp *files.Lis
 		}
 		return nil
 	}
-	if req.Owner != "" {
-		err := e.db.Read(model.QueryEquals("username", req.GetOwner()), &rsp.Files)
+	if req.Username != "" {
+		err := e.db.Read(model.QueryEquals("username", req.GetUsername()), &rsp.Files)
 		if err != nil {
 			return err
 		}
