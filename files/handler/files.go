@@ -22,7 +22,7 @@ func NewFiles() *Files {
 
 	byOwnerID := model.ByEquality("username")
 	//byOwnerID.Order.FieldName = "created"
-	byOwnerID.Order.Type = model.OrderTypeDesc
+	byOwnerID.Order.Type = model.OrderTypeUnordered
 
 	return &Files{
 		db: model.New(
@@ -102,8 +102,6 @@ func (e *Files) List(ctx context.Context, req *files.ListRequest, rsp *files.Lis
 	}
 	if req.Username != "" {
 		q := model.QueryEquals("username", req.GetUsername())
-		//q.Order.FieldName = "created"
-		q.Order.Type = model.OrderTypeDesc
 		err := e.db.Read(q, &rsp.Files)
 		if err != nil {
 			return err
