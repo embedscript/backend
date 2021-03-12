@@ -30,6 +30,7 @@ func NewFiles() *Files {
 			&model.Options{
 				Key:     "Id",
 				Indexes: []model.Index{i, byOwnerID},
+				Debug:   true,
 			},
 		),
 		dbPartialIndexed: model.New(
@@ -37,6 +38,7 @@ func NewFiles() *Files {
 			&model.Options{
 				Key:     "Id",
 				Indexes: []model.Index{i},
+				Debug:   true,
 			},
 		),
 	}
