@@ -63,6 +63,7 @@ func (e *Files) Save(ctx context.Context, req *files.SaveRequest, rsp *files.Sav
 
 		if acc.Metadata != nil && acc.Metadata["username"] != "" {
 			f.Username = acc.Metadata["username"]
+			log.Infof("username %v", f.Username)
 		}
 		if !strings.Contains(file.Project, "preview") {
 			err = e.db.Create(file)
