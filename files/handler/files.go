@@ -21,7 +21,7 @@ func NewFiles() *Files {
 	i.Order.Type = model.OrderTypeUnordered
 
 	byOwnerID := model.ByEquality("username")
-	byOwnerID.Order.FieldName = "created"
+	//byOwnerID.Order.FieldName = "created"
 	byOwnerID.Order.Type = model.OrderTypeDesc
 
 	return &Files{
