@@ -82,7 +82,7 @@ func (e *Files) List(ctx context.Context, req *files.ListRequest, rsp *files.Lis
 	rsp.Files = []*files.File{}
 
 	if req.Project != "" {
-		err := e.db.Read(model.QueryEquals("project", req.GetProject()), &rsp.Files)
+		err := e.db.Read(model.QueryEquals("Project", req.GetProject()), &rsp.Files)
 		if err != nil {
 			return err
 		}
@@ -101,7 +101,7 @@ func (e *Files) List(ctx context.Context, req *files.ListRequest, rsp *files.Lis
 		return nil
 	}
 	if req.Username != "" {
-		q := model.QueryEquals("username", req.GetUsername())
+		q := model.QueryEquals("Username", req.GetUsername())
 		//q.Order.FieldName = "created"
 		q.Order.Type = model.OrderTypeDesc
 		err := e.db.Read(q, &rsp.Files)
