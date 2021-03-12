@@ -30,7 +30,7 @@ func NewFiles() *Files {
 			&model.Options{
 				Key:     "Id",
 				Indexes: []model.Index{i, byOwnerID},
-				Debug:   true,
+				Debug:   false,
 			},
 		),
 		dbPartialIndexed: model.New(
@@ -38,7 +38,7 @@ func NewFiles() *Files {
 			&model.Options{
 				Key:     "Id",
 				Indexes: []model.Index{i},
-				Debug:   true,
+				Debug:   false,
 			},
 		),
 	}
@@ -64,8 +64,7 @@ func (e *Files) Save(ctx context.Context, req *files.SaveRequest, rsp *files.Sav
 		}
 
 		if acc.Metadata != nil && acc.Metadata["username"] != "" {
-			f.Username = acc.Metadata["username"]
-			log.Infof("username %v", f.Username)
+			file.Username = acc.Metadata["username"]
 		}
 		if !strings.Contains(file.Project, "preview") {
 			err = e.db.Create(file)
