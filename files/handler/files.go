@@ -62,7 +62,6 @@ func (e *Files) Save(ctx context.Context, req *files.SaveRequest, rsp *files.Sav
 		}
 
 		if acc.Metadata != nil && acc.Metadata["username"] != "" {
-			log.Infof("username %v", acc.Metadata["username"])
 			f.Username = acc.Metadata["username"]
 		}
 		if !strings.Contains(file.Project, "preview") {
@@ -102,7 +101,10 @@ func (e *Files) List(ctx context.Context, req *files.ListRequest, rsp *files.Lis
 		return nil
 	}
 	if req.Username != "" {
-		err := e.db.Read(model.QueryEquals("username", req.GetUsername()), &rsp.Files)
+		q := model.QueryEquals("username", req.GetUsername())
+		q.Order.FieldName = "created"
+		q.Order.Type = model.OrderTypeDesc
+		err := e.db.Read(q, &rsp.Files)
 		if err != nil {
 			return err
 		}
