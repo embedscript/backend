@@ -60,7 +60,9 @@ func (e *Files) Save(ctx context.Context, req *files.SaveRequest, rsp *files.Sav
 		if f.Id != "" && f.Owner != acc.ID {
 			return errors.New("Not authorized")
 		}
+
 		if acc.Metadata != nil && acc.Metadata["username"] != "" {
+			log.Infof("username %v", acc.Metadata["username"])
 			f.Username = acc.Metadata["username"]
 		}
 		if !strings.Contains(file.Project, "preview") {
