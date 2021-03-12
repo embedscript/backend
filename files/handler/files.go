@@ -102,7 +102,7 @@ func (e *Files) List(ctx context.Context, req *files.ListRequest, rsp *files.Lis
 	}
 	if req.Username != "" {
 		q := model.QueryEquals("username", req.GetUsername())
-		q.Order.FieldName = "created"
+		//q.Order.FieldName = "created"
 		q.Order.Type = model.OrderTypeDesc
 		err := e.db.Read(q, &rsp.Files)
 		if err != nil {
