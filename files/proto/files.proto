@@ -50,7 +50,7 @@ message ListRequest {
 
 	// list by owner username instead of project
 	string username = 3;
-	repeated string ids = 4;
+	repeated string projects = 4;
 }
 
 message ListResponse {
