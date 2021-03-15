@@ -83,6 +83,17 @@ func (e *Files) List(ctx context.Context, req *files.ListRequest, rsp *files.Lis
 	log.Info("Received Files.List request")
 	rsp.Files = []*files.File{}
 
+	if len(req.Ids) > 0 {
+		for _, id := range req.Ids {
+			f := files.File{}
+			err := e.db.Read(model.QueryByID(id), &f)
+			if err != nil {
+				return err
+			}
+			rsp.Files = append(rsp.Files, &f)
+		}
+		return nil
+	}
 	if req.Project != "" {
 		err := e.db.Read(model.QueryEquals("project", req.GetProject()), &rsp.Files)
 		if err != nil {
