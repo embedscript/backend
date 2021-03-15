@@ -86,7 +86,7 @@ func (e *Files) List(ctx context.Context, req *files.ListRequest, rsp *files.Lis
 	if len(req.Ids) > 0 {
 		for _, id := range req.Ids {
 			f := files.File{}
-			err := e.db.Read(model.QueryByID(id), &f)
+			err := e.db.Read(model.QueryEquals("Id", id), &f)
 			if err != nil {
 				return err
 			}
