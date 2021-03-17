@@ -14,35 +14,6 @@ import (
 
 type V1 struct{}
 
-func (e *V1) ServeInOne(ctx context.Context, req *pb.Request, rsp *pb.Response) error {
-	files := filesproto.NewFilesService("files", client.DefaultClient)
-
-	if len(req.Get) == 0 || len(req.Get["project"].Values) == 0 {
-		return errors.New("bad request")
-	}
-	project := req.Get["project"].Values[0]
-	logger.Infof("Serving %v", project)
-
-	resp, err := files.List(ctx, &filesproto.ListRequest{
-		Project: project,
-	})
-	if err != nil {
-		return err
-	}
-	if len(resp.Files) == 0 {
-		return errors.New("not found")
-	}
-	logger.Infof("%v files found for %v, length %v, title %v", len(resp.Files), project, len(resp.Files[0].FileContents), resp.Files[0].Name)
-	// ? huh
-	rsp.Header = make(map[string]*pb.Pair)
-	rsp.Header["Content-Type"] = &pb.Pair{
-		Key:    "Content-Type",
-		Values: []string{"text/html", "charset=UTF-8"},
-	}
-	rsp.Body = resp.Files[0].FileContents
-	return nil
-}
-
 func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error {
 	files := filesproto.NewFilesService("files", client.DefaultClient)
 
@@ -91,8 +62,12 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 
 	id, _ := uuid.NewV4()
 
+	scriptTags, linkTags, html := extractScriptLink(htmlFile)
+	htmlFile = html
+
 	rendered := `<html>
 	<head>
+	    ` + linkTags + `
 		<style>` +
 		cssFile +
 		`</style>
@@ -100,6 +75,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	<body>
 	<div id="` + id.String() + `">
 	</div>
+	` + scriptTags + `
 	<script src="https://embedscript.com/assets/micro.js"></script>
 	<script src="https://kof.github.io/diff-renderer/dist/diff-renderer.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
@@ -157,4 +133,18 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	}
 	rsp.Body = rendered
 	return nil
+}
+
+func extractScriptLink(html string) (script string, link string, rest string) {
+	for _, line := range strings.Split(html, "\n") {
+		switch {
+		case strings.HasPrefix(line, "<script"):
+			script += line
+		case strings.HasPrefix(line, "<link"):
+			link += line
+		default:
+			rest += line
+		}
+	}
+	return
 }
