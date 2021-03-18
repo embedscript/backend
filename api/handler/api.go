@@ -133,8 +133,8 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		` + jsFile + `
 	}
 
-	//if (getCookie("micro_access")) {
-	if (false) {
+	if (getCookie("micro_access")) {
+	// if (false) {
 		Embed.call("auth/Auth/Inspect", {
 			"options": {
 				"namespace": "backend",
