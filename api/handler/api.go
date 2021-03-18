@@ -152,7 +152,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	}
 
 	document.addEventListener("DOMContentLoaded", function (event) {
-		start();
+		_start();
 	})</script>` +
 		`</body>
 </html>`
