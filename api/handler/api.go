@@ -30,6 +30,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	htmlFile := ""
 	jsFile := ""
 	cssFile := ""
+	owner := ""
 
 	if req.Get["javascript"] != nil && len(req.Get["javascript"].Values) > 0 &&
 		req.Get["html"] != nil && len(req.Get["html"].Values) > 0 &&
@@ -49,6 +50,9 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		}
 
 		for _, file := range resp.Files {
+			if file.Owner != "" {
+				owner = file.Owner
+			}
 			switch {
 			case strings.Contains(file.Path, "main"):
 				jsFile = file.FileContents
@@ -119,10 +123,11 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 				}
 			)
 		},
-		loggedIn: false,
+		isLoggedIn: false,
 		requireLogin: Micro.requireLogin,
 		project: "` + project + `",
 		user: {},
+		isOwner: false
 	}
 	var _counter = 0;
 	var _start = function() {
@@ -152,6 +157,10 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 				"token": getCookie("micro_access"),
 			}, function(dat) {
 				Embed.user = dat.account
+				if (data.id === "` + owner + `") {
+					Embed.isOwner = true
+				}
+				Embed.isLoggedIn = true
 				if (Embed.user.metadata) {
 					Embed.user.name = Embed.user.metadata.username
 				}
