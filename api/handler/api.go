@@ -92,7 +92,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		return !((arg1 == arg2) ? options.fn(this) : options.inverse(this));
 	});
 
-	function _render(view) {
+	function render(view) {
 		if (!view) {
 			template.innerHTML = "Variable 'view' not found";
 			return
