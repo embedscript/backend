@@ -105,7 +105,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		DiffRenderer.render()
 	}
 	var Embed = {
-		render: _render,
+		render: render,
 		call: function(endpoint, request, callback, namespace) {
 			if (!namespace) {
 				namespace = "backend"
