@@ -152,7 +152,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 				"token": getCookie("micro_access"),
 			}, function(dat) {
 				Embed.user = dat.account
-				if (dat.id === "` + owner + `") {
+				if (dat.account.id === "` + owner + `") {
 					Embed.isOwner = true
 				}
 				Embed.isLoggedIn = true
