@@ -92,7 +92,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		return !((arg1 == arg2) ? options.fn(this) : options.inverse(this));
 	});
 
-	function render(view) {
+	function _render(view) {
 		if (!view) {
 			template.innerHTML = "Variable 'view' not found";
 			return
@@ -105,7 +105,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		DiffRenderer.render()
 	}
 	var Embed = {
-		render: render,
+		render: _render,
 		call: function(endpoint, request, callback) {
 			Micro.post(
 				endpoint,
@@ -116,13 +116,35 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 				}
 			)
 		},
+		loggedIn: false,
 		requireLogin: Micro.requireLogin,
 		project: "` + project + `",
 	}
+	var _counter = 0;
+	var _start = function() {
+		counter++
+		if (counter < 2) {
+			return
+		}
+		` + jsFile + `
+	}
 
-	document.addEventListener("DOMContentLoaded", function (event) {` +
-		jsFile +
-		`})</script>` +
+	if (getCookie("micro_refresh")) {
+		Embed.call("auth/Auth/Inspect", {
+			"options": {
+				"namespace": "backend",
+			},
+			"token": getCookie("micro_refresh"),
+		}, functions() {
+			_start();
+		})
+	} else {
+		counter++
+	}
+
+	document.addEventListener("DOMContentLoaded", function (event) {
+		start();
+	})</script>` +
 		`</body>
 </html>`
 
