@@ -135,17 +135,28 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 
 	if (getCookie("micro_access")) {
 	// if (false) {
-		Embed.call("auth/Auth/Inspect", {
-			"options": {
-				"namespace": "backend",
-			},
-			"token": getCookie("micro_access"),
-		}, function(dat) {
-			Embed.user = dat.account
-			if (Embed.user.metadata) {
-				Embed.user.name = Embed.user.metadata.username
+
+		// Bit of a wasteful call, as if the micro token is already expired
+		// this token refresher call will trigger a preliminary token refresher call
+		// from micro...
+		Embed.call("auth/Auth/Token", {
+			refreshToken: getCookie("micro_refresh"),
+			options: {
+			  namespace: "backend"
 			}
-			_start();
+		}, function(dat) {
+			Embed.call("auth/Auth/Inspect", {
+				"options": {
+					"namespace": "backend",
+				},
+				"token": getCookie("micro_access"),
+			}, function(dat) {
+				Embed.user = dat.account
+				if (Embed.user.metadata) {
+					Embed.user.name = Embed.user.metadata.username
+				}
+				_start();
+			}, "micro")
 		}, "micro")
 	} else {
 		_counter++
