@@ -141,14 +141,9 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	if (getCookie("micro_access")) {
 	// if (false) {
 
-		// Bit of a wasteful call, as if the micro token is already expired
-		// this token refresher call will trigger a preliminary token refresher call
-		// from micro...
-		Embed.call("auth/Auth/Token", {
-			refreshToken: getCookie("micro_refresh"),
-			options: {
-			  namespace: "backend"
-			}
+		// triggering a refreshal of the token
+		Embed.call("files/list", {
+			project: "helloworld
 		}, function(dat) {
 			Embed.call("auth/Auth/Inspect", {
 				"options": {
@@ -166,7 +161,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 				}
 				_start();
 			}, "micro")
-		}, "micro")
+		})
 	} else {
 		_counter++
 	}
