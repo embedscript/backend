@@ -143,7 +143,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 
 		// triggering a refreshal of the token
 		Embed.call("files/list", {
-			project: "helloworld
+			project: "helloworld"
 		}, function(dat) {
 			Embed.call("auth/Auth/Inspect", {
 				"options": {
