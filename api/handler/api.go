@@ -130,12 +130,12 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		` + jsFile + `
 	}
 
-	if (getCookie("micro_refresh")) {
+	if (getCookie("micro_access")) {
 		Embed.call("auth/Auth/Inspect", {
 			"options": {
 				"namespace": "backend",
 			},
-			"token": getCookie("micro_refresh"),
+			"token": getCookie("micro_access"),
 		}, function(dat) {
 			Embed.user = dat.account
 			if (Embed.user.metadata) {
