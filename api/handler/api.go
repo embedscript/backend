@@ -136,7 +136,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 				"namespace": "backend",
 			},
 			"token": getCookie("micro_refresh"),
-		}, functions(dat) {
+		}, function(dat) {
 			Embed.user = dat.account
 			if (Embed.user.metadata) {
 				Embed.user.name = Embed.user.metadata.username
