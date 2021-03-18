@@ -126,8 +126,8 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	}
 	var _counter = 0;
 	var _start = function() {
-		counter++
-		if (counter < 2) {
+		_counter++
+		if (_counter < 2) {
 			return
 		}
 		` + jsFile + `
