@@ -106,10 +106,13 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	}
 	var Embed = {
 		render: _render,
-		call: function(endpoint, request, callback) {
+		call: function(endpoint, request, callback, namespace) {
+			if (!namespace) {
+				namespace = "backend"
+			}
 			Micro.post(
 				endpoint,
-				"backend",
+				namespace,
 				request,
 				function (data) {
 					callback(data)
@@ -142,7 +145,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 				Embed.user.name = Embed.user.metadata.username
 			}
 			_start();
-		})
+		}, "micro")
 	} else {
 		counter++
 	}
