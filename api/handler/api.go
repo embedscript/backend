@@ -98,7 +98,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	</div>
 	` + scriptTags + `
 	<script src="` + links["microjs"] + `"></script>
-	<script src="` + links["diff-renderer"] + `"></script>
+	<script type=module src="` + links["diff-renderer"] + `"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 	<script id="template" type="x-tmpl-mustache">` +
 		htmlFile + `
