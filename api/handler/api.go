@@ -20,6 +20,10 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	if req.Get["project"] == nil || len(req.Get["project"].Values) == 0 {
 		return errors.New("bad request")
 	}
+	local := false
+	if req.Get["local"] != nil {
+		local = true
+	}
 	project := req.Get["project"].Values[0]
 	script := ""
 	if req.Get["script"] != nil && len(req.Get["script"].Values) > 0 {
@@ -69,6 +73,19 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	scriptTags, linkTags, html := extractScriptLink(htmlFile)
 	htmlFile = html
 
+	prodLinks := map[string]string{
+		"microjs":       "https://embedscript.com/assets/micro.js",
+		"diff-renderer": "https://kof.github.io/diff-renderer/dist/diff-renderer.js",
+	}
+	localLinks := map[string]string{
+		"microjs":       "http://127.0.0.1:4200/assets/micro.js",
+		"diff-renderer": "http://127.0.0.1:4200/assets/diff-renderer",
+	}
+	links := prodLinks
+	if local {
+		links = localLinks
+	}
+
 	rendered := `<html>
 	<head>
 	    ` + linkTags + `
@@ -80,8 +97,8 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	<div id="` + id.String() + `">
 	</div>
 	` + scriptTags + `
-	<script src="https://embedscript.com/assets/micro.js"></script>
-	<script src="https://kof.github.io/diff-renderer/dist/diff-renderer.js"></script>
+	<script src="` + links["microjs"] + `"></script>
+	<script src="` + links["diff-renderer"] + `"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 	<script id="template" type="x-tmpl-mustache">` +
 		htmlFile + `
