@@ -103,7 +103,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		htmlFile + `
 	</script>
 	<script type=module>
-	import * as morphdom from 'https://unpkg.com/morphdom?module';
+	var morphom = require('https://unpkg.com/morphdom?module');
 
 	Handlebars.registerHelper({
 		eq: (v1, v2) => v1 === v2,
@@ -131,7 +131,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		
 		var el = document.createElement('html');
 		el.innerHTML = rendered
-		morphdom.morphdom(document.getElementById('` + id.String() + `'), el);
+		morphdom(document.getElementById('` + id.String() + `'), el);
 	}
 	var Embed = {
 		render: _render,
