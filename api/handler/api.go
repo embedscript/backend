@@ -75,11 +75,11 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 
 	prodLinks := map[string]string{
 		"microjs":       "https://embedscript.com/assets/micro.js",
-		"diff-renderer": "https://kof.github.io/diff-renderer/dist/diff-renderer.js",
+		"diff-renderer": "https://cdn.jsdelivr.net/npm/morphdom@2.6.1/dist/morphdom.min.js",
 	}
 	localLinks := map[string]string{
 		"microjs":       "http://127.0.0.1:4200/assets/micro.js",
-		"diff-renderer": "http://127.0.0.1:4200/assets/diff-renderer.js",
+		"diff-renderer": "https://cdn.jsdelivr.net/npm/morphdom@2.6.1/dist/morphdom.min.js",
 	}
 	links := prodLinks
 	if local {
@@ -104,8 +104,6 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		htmlFile + `
 	</script>
 	<script type=module>
-	import { html, render } from 'https://unpkg.com/lit-html?module';
-
 	Handlebars.registerHelper({
 		eq: (v1, v2) => v1 === v2,
 		ne: (v1, v2) => v1 !== v2,
@@ -132,7 +130,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		
 		var el = document.createElement('html');
 		el.innerHTML = rendered
-		render(el, document.getElementById('` + id.String() + `'));
+		morphdom(document.getElementById('` + id.String() + `'), el);
 	}
 	var Embed = {
 		render: _render,
