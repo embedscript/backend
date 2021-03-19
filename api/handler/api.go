@@ -131,7 +131,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		var template = Handlebars.compile(source);
 		var rendered = template(view);
 		
-		render(rendere, document.body);d
+		render(rendered, document.body);d
 	}
 	var Embed = {
 		render: render,
