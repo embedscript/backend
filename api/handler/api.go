@@ -104,9 +104,8 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		htmlFile + `
 	</script>
 	<script type=module>
-		import { html, render } from 'https://unpkg.com/lit-html?module';
-	</script>
-	<script>
+	import { html, render } from 'https://unpkg.com/lit-html?module';
+
 	Handlebars.registerHelper({
 		eq: (v1, v2) => v1 === v2,
 		ne: (v1, v2) => v1 !== v2,
