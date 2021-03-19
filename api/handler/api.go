@@ -129,9 +129,9 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		var template = Handlebars.compile(source);
 		var rendered = template(view);
 		
-		var el = document.createElement('html');
-		el.innerHTML = rendered
-		morphdom(document.getElementById('` + id.String() + `'), el);
+		//var el = document.createElement('html');
+		//el.innerHTML = rendered
+		morphdom(document.getElementById('` + id.String() + `'), rendered);
 	}
 	var Embed = {
 		render: _render,
