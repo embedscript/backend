@@ -89,10 +89,10 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	<script>
 	var renderer = new DiffRenderer(document.getElementById('` + id.String() + `'))
 
-	Handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
+	Handlebars.registerHelper('eq', function (arg1, arg2, options) {
 		return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
 	});
-	Handlebars.registerHelper('ifNotEquals', function (arg1, arg2, options) {
+	Handlebars.registerHelper('neq', function (arg1, arg2, options) {
 		return !((arg1 == arg2) ? options.fn(this) : options.inverse(this));
 	});
 
