@@ -114,7 +114,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		var rendered = template(view);
 		
 		renderer.update(rendered)
-		DiffRenderer.render()
+		//DiffRenderer.render()
 	}
 	var Embed = {
 		render: render,
