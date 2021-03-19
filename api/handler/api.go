@@ -103,9 +103,10 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	<script id="template" type="x-tmpl-mustache">` +
 		htmlFile + `
 	</script>
+	<script type=module>
+		import { html, render } from 'https://unpkg.com/lit-html?module';
+	</script>
 	<script>
-	var renderer = new DiffRenderer(document.getElementById('` + id.String() + `'))
-
 	Handlebars.registerHelper({
 		eq: (v1, v2) => v1 === v2,
 		ne: (v1, v2) => v1 !== v2,
@@ -130,8 +131,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		var template = Handlebars.compile(source);
 		var rendered = template(view);
 		
-		renderer.update(rendered)
-		DiffRenderer.render()
+		render(rendere, document.body);d
 	}
 	var Embed = {
 		render: render,
