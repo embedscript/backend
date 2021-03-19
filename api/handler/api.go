@@ -104,6 +104,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		}
 	});
 
+	DiffRenderer.render()
 	function render(view) {
 		if (!view) {
 			template.innerHTML = "Variable 'view' not found";
@@ -114,7 +115,6 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		var rendered = template(view);
 		
 		renderer.update(rendered)
-		//DiffRenderer.render()
 	}
 	var Embed = {
 		render: render,
