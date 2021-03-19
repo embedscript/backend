@@ -79,7 +79,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	}
 	localLinks := map[string]string{
 		"microjs":       "http://127.0.0.1:4200/assets/micro.js",
-		"diff-renderer": "http://127.0.0.1:4200/assets/diff-renderer",
+		"diff-renderer": "http://127.0.0.1:4200/assets/diff-renderer.js",
 	}
 	links := prodLinks
 	if local {
