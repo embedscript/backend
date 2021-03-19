@@ -103,7 +103,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		htmlFile + `
 	</script>
 	<script type=module>
-	import { morphdom } from 'https://unpkg.com/morphdom?module';
+	import * as morphdom from 'https://unpkg.com/morphdom?module';
 
 	Handlebars.registerHelper({
 		eq: (v1, v2) => v1 === v2,
