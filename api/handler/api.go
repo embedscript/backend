@@ -122,7 +122,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		}
 	});
 
-	function render(view) {
+	function _render(view) {
 		if (!view) {
 			template.innerHTML = "Variable 'view' not found";
 			return
@@ -134,7 +134,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		render(rendered, document.body);
 	}
 	var Embed = {
-		render: render,
+		render: _render,
 		call: function(endpoint, request, callback, namespace) {
 			if (!namespace) {
 				namespace = "backend"
