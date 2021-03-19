@@ -131,7 +131,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		
 		var el = document.createElement('html');
 		el.innerHTML = rendered
-		morphdom(document.getElementById('` + id.String() + `'), el);
+		morphdom.morphdom(document.getElementById('` + id.String() + `'), el);
 	}
 	var Embed = {
 		render: _render,
