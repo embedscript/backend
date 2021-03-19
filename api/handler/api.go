@@ -120,7 +120,6 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		}
 	});
 
-	var targ = document.getElementById('` + id.String() + `')
 	function _render(view) {
 		if (!view) {
 			template.innerHTML = "Variable 'view' not found";
@@ -132,7 +131,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		
 		var el = document.createElement('html');
 		el.innerHTML = '<div id="` + id.String() + `">' + rendered + '</div>'
-		morphdom(targ, el);
+		morphdom(document.getElementById('` + id.String() + `'), el);
 	}
 	var Embed = {
 		render: _render,
