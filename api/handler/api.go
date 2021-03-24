@@ -98,12 +98,13 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	</div>
 	` + scriptTags + `
 	<script src="` + links["microjs"] + `"></script>
+	<sript src="https://cdn.jsdelivr.net/npm/nanomorph@5.4.3/index.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 	<script id="template" type="x-tmpl-mustache">` +
 		htmlFile + `
 	</script>
 	<script type=module>
-	import {default as morphdom} from 'https://unpkg.com/morphdom?module';
+	//import {default as morph} from 'https://unpkg.com/nanomorph?module';
 
 	Handlebars.registerHelper({
 		eq: (v1, v2) => v1 === v2,
@@ -132,7 +133,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		var el = document.createElement('div');
 		el.id = '` + id.String() + `'
 		el.innerHTML = rendered
-		morphdom(document.getElementById('` + id.String() + `'), el, {childrenOnly: true});
+		morph(document.getElementById('` + id.String() + `'), el);
 	}
 	var Embed = {
 		render: _render,
