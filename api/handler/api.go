@@ -98,7 +98,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 	</div>
 	` + scriptTags + `
 	<script src="` + links["microjs"] + `"></script>
-	<sript src="https://cdn.jsdelivr.net/npm/nanomorph@5.4.3/index.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/nanomorph@5.4.3/index.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 	<script id="template" type="x-tmpl-mustache">` +
 		htmlFile + `
