@@ -133,7 +133,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		var el = document.createElement('div');
 		el.id = '` + id.String() + `'
 		el.innerHTML = rendered
-		morph(document.getElementById('` + id.String() + `'), el);
+		nanomorph(document.getElementById('` + id.String() + `'), el);
 	}
 	var Embed = {
 		render: _render,
