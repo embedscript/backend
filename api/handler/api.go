@@ -132,7 +132,7 @@ func (e *V1) Serve(ctx context.Context, req *pb.Request, rsp *pb.Response) error
 		var el = document.createElement('div');
 		el.id = '` + id.String() + `'
 		el.innerHTML = rendered
-		morphdom(document.getElementById('` + id.String() + `'), el);
+		morphdom(document.getElementById('` + id.String() + `'), el, {childrenOnly: true});
 	}
 	var Embed = {
 		render: _render,
